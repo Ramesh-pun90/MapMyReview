@@ -1,5 +1,5 @@
-const User = require("../models/user");
-const Listing = require("../models/listing"); // ✅ यो लाइन थप्न नबिर्सनुहोस्
+const User = require("../models/user.js");
+const Listing = require("../models/Listing.js"); // ✅ यो लाइन थप्न नबिर्सनुहोस्
 
 
 const multer = require('multer');
@@ -8,7 +8,7 @@ const upload = multer({ storage });
 module.exports.uploadProfileImage = upload.single("profileImage");
 
 
-// Signup form render
+// Signup form rendercle
 module.exports.renderSignUpForm = (req, res) => {
   res.render("users/signup.ejs");
 };
