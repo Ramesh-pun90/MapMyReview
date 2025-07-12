@@ -1,0 +1,32 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container mt-4">
+  <h2 class="page-heading">My Listings</h2>
+
+  <div class="row">
+    <% if (listings.length === 0) { %>
+      <p class="no-listings-text">Listings are not created yet.</p>
+    <% } else { %>
+      <% listings.forEach(listing => { %>
+        <div class="col listing-card">
+          <a href="/listings/<%= listing._id %>" class="listing-link">
+            <div class="card card-underline">
+              <% if (listing.image && listing.image.url) { %>
+                <img src="<%= listing.image.url %>" alt="<%= listing.title %>" class="card-img-top">
+              <% } else { %>
+                <div class="no-image-placeholder">
+                  No Image
+                </div>
+              <% } %>
+              <div class="card-boddy-myListings" style="text-align:center; ">
+                <p><strong><%= listing.title %></strong></p>
+                <p>Rs. <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / per night</p>
+                <p class="text-muted"><%= listing.location %>, <%= listing.country %></p>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+</div>

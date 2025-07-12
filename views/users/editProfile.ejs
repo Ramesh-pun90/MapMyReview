@@ -1,0 +1,131 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container mt-4">
+  <h2>Edit Profile</h2>
+
+  <form action="/profile/?_method=PUT" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input 
+        type="text" 
+        id="name" 
+        name="userProfile[name]" 
+        value="<%= user.userProfile?.name %>" 
+        class="form-control" 
+        required>
+      <div class="invalid-feedback">Please enter your name.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="age" class="form-label">Age</label>
+      <input 
+        type="number" 
+        id="age" 
+        name="userProfile[age]" 
+        value="<%= user.userProfile?.age %>" 
+        class="form-control" 
+        required>
+      <div class="invalid-feedback">Please enter your age.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="bio" class="form-label">Bio</label>
+      <textarea 
+        id="bio" 
+        name="userProfile[bio]" 
+        rows="4" 
+        class="form-control" 
+        required><%= user.userProfile?.bio %></textarea>
+      <div class="invalid-feedback">Please enter a bio.</div>
+    </div>
+        <div class="mb-3">
+      <label for="hobbies" class="form-label">hobbies</label>
+      <input 
+        id="hobbies" 
+        name="userProfile[hobbies]" 
+        value="<%= user.userProfile?.hobbies %>"
+        class="form-control" 
+        required>
+      <div class="invalid-feedback">Please enter a bio.</div>
+    </div>
+
+        <div class="mb-3">
+      <label for="currentAdress" class="form-label">CurrentAderess</label>
+      <input
+        id="currentAdress" 
+        name="userProfile[currentAdress]" 
+        value="<%= user.userProfile?.currentAdress %>" 
+        class="form-control" 
+        required>
+      <div class="invalid-feedback">please enter your current Adress.</div>
+    </div>
+
+        <div class="mb-3">
+      <label for="homeTownAdress" class="form-label">HomeTownAdress</label>
+      <input
+        id="homeTownAdress" 
+        name="userProfile[homeTownAdress]"
+        value="<%= user.userProfile?.homeTownAdress %>" 
+        class="form-control" 
+        required>
+      <div class="invalid-feedback">please enter your homeTown City Adress </div>
+    </div>
+
+        <div class="mb-3">
+      <label for="RelationShip" class="form-label">RelationShip Status</label>
+      <input 
+        id="RelationShip" 
+        name="userProfile[RelationShip]" 
+        value="<%= user.userProfile?.RelationShip %>" 
+        class="form-control" 
+        required>
+      <div class="invalid-feedback">please enter your relationship status.</div>
+    </div>
+
+            <div class="mb-3">
+      <label for="Collage" class="form-label">collage</label>
+      <input 
+        id="Collage" 
+        name="userProfile[Collage]" 
+        value="<%= user.userProfile?.Collage %>" 
+        class="form-control" 
+        required>
+      <div class="invalid-feedback">please enter your relationship status.</div>
+    </div>
+
+        <div class="mb-3">
+      <label for="favAnimal" class="form-label">favorite Animal</label>
+      <input
+        id="favAnimal" 
+        name="userProfile[favAnimal]" 
+        value="<%= user.userProfile?.favAnimal %>" 
+        class="form-control" 
+        required>
+      <div class="invalid-feedback">Please enter your favAnimal.</div>
+    </div>
+
+      <div class="mb-3">
+      <label for="work" class="form-label">work</label>
+      <input
+        id="work" 
+        name="userProfile[work]" 
+        value="<%= user.userProfile?.work %>" 
+        class="form-control" 
+        required>
+      <div class="invalid-feedback">Please enter your favAnimal.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="profileImage" class="form-label">Profile Image</label>
+      <input 
+        type="file" 
+        id="profileImage" 
+        name="profileImage" 
+        class="form-control">
+    </div>
+
+    <button class="btn btn-success" type="submit">Update Profile</button>
+  </form>
+</div>
+

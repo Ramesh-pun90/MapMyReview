@@ -1,0 +1,142 @@
+<% layout("layouts/boilerplate") -%>
+
+<style>
+  .create-form-wrapper {
+    max-width: 65%;
+    margin: 4rem auto;
+    background: linear-gradient(135deg, #f8fcff, #e6f7fb);
+    padding: 3rem 3.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.15);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  h3 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.05);
+  }
+
+  label.form-label {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #34495e;
+  }
+
+  .form-control {
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #3498db;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .form-control:focus {
+    border-color: #1abc9c;
+    box-shadow: 0 0 8px rgba(26, 188, 156, 0.4);
+    background-color: #f0fefc;
+  }
+
+  textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .valid-feedback,
+  .invalid-feedback {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .valid-feedback {
+    color: #27ae60;
+  }
+
+  .invalid-feedback {
+    color: #c0392b;
+  }
+
+  select.form-control {
+    appearance: none;
+    background: url("data:image/svg+xml,%3Csvg fill='%233498db' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 1rem center / 1em auto;
+    padding-right: 2.5rem;
+  }
+
+  .btn-dark.add-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 12px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+  }
+
+  .btn-dark.add-btn:hover {
+    background-color: #34495e;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+  }
+</style>
+
+<div class="create-form-wrapper">
+  <h3>Create a New Listing</h3>
+
+  <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
+    
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input name="listing[title]" id="title" placeholder="Add a catchy title" type="text" class="form-control" required>
+      <div class="valid-feedback">Title looks good!</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea name="listing[description]" id="description" class="form-control" required></textarea>
+      <div class="invalid-feedback">Please enter a short description of your listing.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="image" class="form-label">Upload Image</label>
+      <input name="listing[image]" id="image" type="file" class="form-control" accept="image/*">
+    </div>
+
+    <div class="row">
+      <div class="mb-3 col-md-4">
+        <label for="price" class="form-label">Price</label>
+        <input name="listing[price]" id="price" type="number" placeholder="13000" class="form-control" required>
+        <div class="invalid-feedback">Please enter a valid price.</div>
+      </div>
+
+      <div class="mb-3 col-md-8">
+        <label for="country" class="form-label">Country</label>
+        <input name="listing[country]" id="country" placeholder="Nepal" type="text" class="form-control" required>
+        <div class="invalid-feedback">Country name should be valid.</div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="location" class="form-label">Location</label>
+      <input name="listing[location]" id="location" placeholder="Rukum" type="text" class="form-control" required>
+      <div class="invalid-feedback">Location should be valid.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="category" class="form-label">Category:</label>
+      <select name="listing[category]" id="category" class="form-control" required>
+        <option value="">-- Select Category --</option>
+        <% categories.forEach(category => { %>
+          <option value="<%= category %>"><%= category %></option>
+        <% }); %>
+      </select>
+    </div>
+
+    <button class="btn btn-dark add-btn">Add Listing</button>
+  </form>
+</div>

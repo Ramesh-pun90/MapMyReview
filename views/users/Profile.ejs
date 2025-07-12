@@ -1,0 +1,109 @@
+<% layout("layouts/boilerplate") %>
+<div class="container-profile">
+  <div class="sidebar">
+    <ul>
+      <li class="active">
+        <% if(user.userProfile && user.userProfile.image) { %>
+          <img src="<%= user.userProfile.image %>" class="sidebar-img">
+        <% } else { %>
+          <i class="fa fa-user"></i>
+        <% } %>
+        <a href="/profile" style="text-decoration: none;">About me</a>
+      </li>
+      <li class="active"><i class="fa-duotone fa-solid fa-heart"></i><a href="/profile/favorites" style="text-decoration: none;"><span></span> Favorite</a></li>
+      <li class="active"><i class="fa-solid fa-head-side-virus profile"></i><a href="/profile/my-listings" style="text-decoration: none;"><span></span>My Listings</a></li>
+
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <div class="header">
+      <h3>About me</h3>
+      <a href="/profile/edit">
+        <button class="edit-btn-profile">Edit</button>
+      </a>
+    </div>
+
+    <div class="profile-and-btn">
+      <div class="profile-card">
+        <% if(user.userProfile && user.userProfile.image) { %>
+          <img src="<%= user.userProfile.image %>" class="profile-img">
+        <% } else { %>
+          <i class="fa fa-user" style="font-size:3rem; margin-bottom:0.5rem;"></i>
+        <% } %>
+        <h3><%= user.username %></h3>
+      </div>
+      <% if (!hasProfileInfo) { %>
+  <div class="completeProfile">
+    <h3>Complete your profile</h3>
+    <p>Your wonderlust profile is an<br> important part of every reservation...</p>
+    <a href="/profile/edit">
+      <button class="cta-btn">Get started</button>
+    </a>
+  </div>
+<% } %>
+
+    </div>
+
+    <div class="profile-info">
+      <div class="profile-info-content">
+              <i class="fas fa-user" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>Name:</strong> <%= user.userProfile?.name || "Not set" %><br>
+      <hr>
+      </div>
+
+      <div class="profile-info-content">
+        <i class="fas fa-hand-paper" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>Age:</strong> <%= user.userProfile?.age || "Not set" %><br>
+      <hr>
+      </div>
+
+    <div class="profile-info-content">
+       <i class="fas fa-pen" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>Bio:</strong> <%= user.userProfile?.bio || "Not set" %><br>
+      <hr>
+    </div>
+
+<div class="profile-info-content">
+        <i class="fas fa-map-marker-alt" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>Current Address:</strong> <%= user.userProfile?.currentAdress || "Not set" %><br>
+      <hr>
+</div>
+
+    <div class="profile-info-content">
+       <i class="fas fa-city" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>Home Town Address:</strong> <%= user.userProfile?.homeTownAdress || "Not set" %><br>
+      <hr>
+    </div>
+    
+    <div class="profile-info-content">
+            <i class="fas fa-plane" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>Hobbies:</strong> <%= user.userProfile?.hobbies || "Not set" %><br>
+      <hr>
+    </div>
+
+    <div class="profile-info-content">
+        <i class="fas fa-heart" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>Relationship Status:</strong> <%= user.userProfile?.RelationShip || "Not set" %><br>
+      <hr>
+    </div>
+
+<div class="profile-info-content">
+        <i class="fas fa-hand-paper" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>collage:</strong> <%= user.userProfile?.Collage || "Not set" %><br>
+      <hr>
+</div>
+
+<div class="profile-info-content">
+              <i class="fas fa-hand-paper" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>work:</strong> <%= user.userProfile?.work || "Not set" %><br>
+      <hr>
+</div>
+
+<div class="profile-info-content">
+        <i class="fas fa-dog" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
+      <strong>Favorite Animal:</strong> <%= user.userProfile?.favAnimal || "Not set" %><br>
+      <hr>
+</div>
+  </div>
+</div>

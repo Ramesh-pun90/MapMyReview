@@ -1,0 +1,89 @@
+<% layout ("layouts/boilerplate") -%>
+
+<style>
+  body {
+    background-color: #f7fafc;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 88vh;
+    padding-top: 1rem;
+  }
+
+  .login-wrapper {
+    width: 100%;
+    max-width: 500px;
+    background-color: #ffffff;
+    padding: 2.5rem 3rem;
+    border-radius: 1.2rem;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #2c3e50;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    padding: 0.65rem;
+    font-size: 1rem;
+    border: 1.8px solid #ced4da;
+    transition: border-color 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #198754;
+    background-color: #f9fffa;
+    box-shadow: 0 0 8px rgba(25, 135, 84, 0.3);
+  }
+
+  .valid-feedback {
+    color: #198754;
+    font-size: 0.9rem;
+  }
+
+  .btn-success {
+    width: 100%;
+    padding: 0.75rem;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .btn-success:hover {
+    background-color: #157347;
+  }
+</style>
+
+<main>
+  <div class="login-wrapper">
+    <h3>Login to Wanderlust</h3>
+    <form action="/login" method="POST" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input name="username" id="username" type="text" class="form-control" required>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input name="password" id="password" type="password" class="form-control" required>
+      </div>
+
+      <button class="btn btn-success">Login</button>
+    </form>
+  </div>
+</main>

@@ -1,0 +1,148 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  /* Navbar search bar लाई बिल्कुल default राख्न */
+  nav input[type="search"],
+  nav .form-control {
+    all: unset !important;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #121212;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  .login-wrapper {
+    position: relative;
+    background: #1b1b1b;
+    border-radius: 1.5rem;
+    padding: 3rem 3.5rem;
+    width: 100%;
+    max-width: 430px;
+    color: #fff;
+    box-shadow:
+      0 0 15px rgba(255, 140, 0, 0.7),
+      inset 0 0 15px rgba(255, 140, 0, 0.5);
+    border: 1.8px solid #ff8c00;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .login-wrapper::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle at center, rgba(255, 223, 186, 0.8), rgba(255, 223, 186, 0.1) 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: moonGlowMove 8s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+
+  @keyframes moonGlowMove {
+    0% {
+      opacity: 0.9;
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: translate(-10px, 8px) scale(1.05);
+    }
+    100% {
+      opacity: 0.9;
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
+  h3 {
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.8rem;
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 140, 0, 0.9);
+    position: relative;
+    z-index: 2;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #f0f0f0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    padding: 0.65rem;
+    font-size: 0.95rem;
+    box-shadow: none !important;
+    border: 1.5px solid #ff8c00;
+    background-color: #2a2a2a;
+    color: #eee;
+    transition: border-color 0.3s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .form-control:focus {
+    border-color: #ffa500;
+    outline: none;
+    box-shadow: 0 0 10px #ffa500;
+    background-color: #3b3b3b;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 0.7rem;
+    font-weight: 700;
+    border-radius: 10px;
+    background-color: #ff8c00;
+    border: none;
+    color: #fff;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .btn-primary:hover {
+    background-color: #ffa500;
+    box-shadow: 0 0 15px #ffa500;
+  }
+</style>
+
+<main>
+  <div class="login-wrapper">
+    <h3>Admin Login</h3>
+
+    <form action="/admin/login" method="POST" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input name="username" id="username" type="text" class="form-control" required autofocus>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input name="password" id="password" type="password" class="form-control" required>
+      </div>
+
+      <button class="btn btn-primary" type="submit">Login</button>
+    </form>
+  </div>
+</main>
