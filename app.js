@@ -62,7 +62,7 @@ async function main() {
 const store = MongoStore.create({
     mongoUrl: dbUrl,   // यहाँ typo सुधार्नुपर्छ
     crypto: {
-        secret: "mysupersecretcode",
+        secret: process.env.SECRET,  // यहाँ पनि process.env.SECRET प्रयोग गर्नुहोस्
     },
     touchAfter: 24 * 3600,  // seconds मा हुन्छ, २४ घन्टा
 });
@@ -74,7 +74,7 @@ store.on("error", (err) => {   // err parameter पनि लिनुपर्�
 // session and flash setup
 const sessionOptions = {
     store,
-    secret: "mysupersecretkey",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {

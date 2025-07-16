@@ -17,10 +17,16 @@
           <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
             <div class="card card-underline position-relative">
               <img src="<%= listing.image ? listing.image.url : '/images/default.jpg' %>" class="card-img-top" alt="listing image">
-
               <div class="card-body card-body-favorite">
                 <p class="fw-bold mb-2"><%= listing.title %></p>
                 <p class="text-muted mb-2">₹ <%= listing.price %> / night</p>
+
+                <button 
+                  class="favorite-btn hearted" 
+                  data-id="<%= listing._id %>">
+                  <i class="fa-solid fa-heart"></i>
+                </button>
+                
               </div>
             </div>
           </a>
@@ -29,3 +35,54 @@
     <% } %>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.favorite-btn').forEach(button => {
+    button.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const listingId = button.dataset.id;
+
+      try {
+        const res = await fetch(`/listings/${listingId}/favorite`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (!res.ok) {
+          alert("Please login first to remove favorites");
+          return;
+        }
+
+        const data = await res.json();
+
+        // If unfavorited, remove from DOM
+        if (!data.favorited) {
+          const card = button.closest('.col');
+          if (card) card.remove();
+
+          // Check if any favorite remains, if not, show message
+          if (document.querySelectorAll('.favorite-btn').length === 0) {
+            const container = document.querySelector('.row');
+            container.innerHTML = `
+              <div class="col-8 text-center">
+                <div class="alert alert-warning shadow-sm">
+                  <i class="fa-solid fa-heart-crack me-2"></i>
+                  You have no favorite listings yet.
+                </div>
+              </div>
+            `;
+          }
+        }
+
+      } catch (err) {
+        console.error("Error removing favorite", err);
+      }
+    });
+  });
+});
+</script>
