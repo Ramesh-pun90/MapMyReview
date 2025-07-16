@@ -68,7 +68,7 @@ module.exports.renderProfile = async (req, res) => {
     user.userProfile.favAnimal
   );
 
-  res.render("users/profile", { user, hasProfileInfo });
+  res.render("users/Profile", { user, hasProfileInfo });
 };
 
 // Render profile edit form
