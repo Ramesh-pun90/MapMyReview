@@ -197,20 +197,51 @@ module.exports.destroyListing=async (req,res)=>{
 };
 
 
+// module.exports.toggleFavorite = async (req, res) => {
+//   try {
+    
+//     const { id: listingId } = req.params;
+
+//     // Populate चाहिँदैन
+//     const user = await User.findById(req.user._id);
+//     if (!user) {
+//       return res.status(404).json({ error: "User फेला परेन" });
+//     }
+
+//     let favorited;
+
+//     if (user.favorites.includes(listingId)) {
+//       // Remove properly
+//       user.favorites.pull(listingId);
+//       favorited = false;
+//     } else {
+//       user.favorites.push(listingId);
+//       favorited = true;
+//     }
+
+//     await user.save();
+//     res.json({ favorited });
+//   } catch (error) {
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
 module.exports.toggleFavorite = async (req, res) => {
   try {
-    const { id: listingId } = req.params;
+    // ✅ User logged in check
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
 
-    // Populate चाहिँदैन
+    const { id: listingId } = req.params;
     const user = await User.findById(req.user._id);
     if (!user) {
-      return res.status(404).json({ error: "User फेला परेन" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     let favorited;
 
     if (user.favorites.includes(listingId)) {
-      // Remove properly
       user.favorites.pull(listingId);
       favorited = false;
     } else {
@@ -224,7 +255,6 @@ module.exports.toggleFavorite = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 
 
