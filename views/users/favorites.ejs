@@ -16,7 +16,11 @@
         <div class="col animate-card">
           <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
             <div class="card card-underline position-relative">
-              <img src="<%= listing.image ? listing.image.url : '/images/default.jpg' %>" class="card-img-top" alt="listing image">
+<img 
+  src="<%= listing.image && listing.image.length > 0 ? listing.image[0].url : '/images/default.jpg' %>" 
+  alt="<%= listing.title %>" 
+  class="card-img-top"
+/>
               <div class="card-body card-body-favorite">
                 <p class="fw-bold mb-2"><%= listing.title %></p>
                 <p class="text-muted mb-2">₹ <%= listing.price %> / night</p>

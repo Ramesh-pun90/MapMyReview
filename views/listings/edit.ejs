@@ -176,15 +176,19 @@
           Enter a valid short description.
         </div>
       </div>
-
+            <!-- Image preview without changing class names -->
+      <% if (listing.image && listing.image.length > 0) { %>
       <div class="mb-3">
-        original Listing Image:<br>
-        <img src="<%= originalImageUrl %>" class="image-update">
+        <label>Current Images:</label><br>
+        <% listing.image.forEach(img => { %>
+          <img src="<%= img.url %>" alt="Listing Image" style="max-width: 100%; max-height: 210px; border-radius: 16px; margin-bottom: 1rem; margin-left:0.5rem;">
+        <% }) %>
       </div>
+      <% } %>
 
       <div class="mb-3">
-        <label for="image" class="form-label">upload new image</label>
-        <input name="listing[image]" id="image" type="file" class="form-control">
+        <label for="image" class="form-label">Upload new image</label>
+        <input name="listing[image]" id="image" type="file" class="form-control" multiple>
       </div>
 
       <div class="row">

@@ -3,6 +3,25 @@ const Listing = require("./models/Listing.js");
 const Review = require("./models/review.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // uploads फोल्डरमा save हुन्छ
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // unique filename
+  }
+});
+
+
+const upload = multer({ storage });
+
+module.exports = {
+  upload,
+  // ... your other middleware functions (isLoggedIn, validateListing etc)
+};
 
 module.exports.isLoggedIn = (req, res, next) => {
 if (!req.isAuthenticated()) {
@@ -65,11 +84,18 @@ module.exports.isReviewAuthor = async (req, res, next) => {
   if (!review) {
     req.flash("error", "Review is not found");
     return res.redirect(`/listings/${id}`);
-  }
-  if (!review.author.equals(req.user._id) && req.user.role !== "admin") {
+  // }
+  // if (!review.author.equals(req.user._id) && req.user.role !== "admin") {
+  //   req.flash("error", "you are not the author of this review or you are not able to delete it");
+  //   return res.redirect(`/listings/${id}`);
+  // }
+
+    }
+  if (!review.author.equals(req.user._id) || req.user.role !== "admin") {
     req.flash("error", "you are not the author of this review or you are not able to delete it");
     return res.redirect(`/listings/${id}`);
   }
+
   next();
 };
 

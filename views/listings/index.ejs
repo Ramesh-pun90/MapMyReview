@@ -1,110 +1,112 @@
 <% layout("layouts/boilerplate") -%>
+
 <div id="filters">
-                <a href="/listings?category=Hiking">
-        <div class="filter">
-        <div><i class="fa-solid fa-person-hiking"></i></div>
-        <p>Hiking</p>
-</div>
-</a>
+  <a href="/listings?category=Hiking">
+    <div class="filter">
+      <div><i class="fa-solid fa-person-hiking"></i></div>
+      <p>Hiking</p>
+    </div>
+  </a>
 
+  <a href="/listings?category=Iconic city">
+    <div class="filter">
+      <div><i class="fa-solid fa-city"></i></div>
+      <p>Iconic city</p>
+    </div>
+  </a>
 
-<a href="/listings?category=Iconic city">
-        <div class="filter">
-        <div><i class="fa-solid fa-city"></i></div>
-        <p>Iconic city</p>
-</div>
-</a>
+  <a href="/listings?category=Mountain">
+    <div class="filter">
+      <div><i class="fa-solid fa-mountain"></i></div>
+      <p>Mountain</p>
+    </div>
+  </a>
 
+  <a href="/listings?category=Beach">
+    <div class="filter">
+      <div><i class="fa-solid fa-person-swimming"></i></div>
+      <p>Beach</p>
+    </div>
+  </a>
 
-<a href="/listings?category=Mountain">
-        <div class="filter">
-        <div><i class="fa-solid fa-mountain"></i></div>
-        <p>Mountain</p>
-</div>
-</a>
+  <a href="/listings?category=Island">
+    <div class="filter">
+      <div><i class="fa-solid fa-italic"></i></div>
+      <p>Island</p>
+    </div>
+  </a>
 
+  <a href="/listings?category=Desert">
+    <div class="filter">
+      <div><i class="fa-solid fa-campground"></i></div>
+      <p>Desert</p>
+    </div>
+  </a>
 
-<a href="/listings?category=Beach">
-        <div class="filter">
-        <div><i class="fa-solid fa-person-swimming"></i></div>
-        <p>Beach</p>
-</div>
-</a>
+  <a href="/listings?category=Forest">
+    <div class="filter">
+      <div><i class="fa-solid fa-cow"></i></div>
+      <p>Forest</p>
+    </div>
+  </a>
 
+  <a href="/listings?category=Wildlife">
+    <div class="filter">
+      <div><i class="fa-solid fa-snowflake"></i></div>
+      <p>Wildlife</p>
+    </div>
+  </a>
 
-<a href="/listings?category=Island">
-        <div class="filter">
-        <div><i class="fa-solid fa-italic"></i></div>
-        <p>Island</p>
-</div>
-</a>
+  <a href="/listings?category=Romantic">
+    <div class="filter">
+      <div><i class="fa-solid fa-igloo"></i></div>
+      <p>Romantic</p>
+    </div>
+  </a>
 
+  <a href="/listings?category=Adventure">
+    <div class="filter">
+      <div><i class="fa-solid fa-ship"></i></div>
+      <p>Adventure</p>
+    </div>
+  </a>
 
-<a href="/listings?category=Desert">
-        <div class="filter">
-        <div><i class="fa-solid fa-campground"></i></div>
-        <p>Desert</p>
-</div>
-</a>
+  <a href="/listings?category=Cultural">
+    <div class="filter">
+      <div><i class="fa-solid fa-fire"></i></div>
+      <p>Cultural</p>
+    </div>
+  </a>
 
-
-<a href="/listings?category=Forest">
-        <div class="filter">
-        <div><i class="fa-solid fa-cow"></i></div>
-        <p>Forest</p>
-</div>
-</a>
-
-
-<a href="/listings?category=Wildlife">
-        <div class="filter">
-        <div><i class="fa-solid fa-snowflake"></i></div>
-        <p>Wildlife</p>
-</div>
-</a>
-
-
-<a href="/listings?category=Romantic">
-        <div class="filter">
-        <div><i class="fa-solid fa-igloo"></i></div>
-        <p>Romantic</p>
-</div>
-</a>
-
-
-<a href="/listings?category=Adventure">
-        <div class="filter">
-        <div><i class="fa-solid fa-ship"></i></div>
-        <p>Adventure</p>
-</div>
-</a>
-<a href="/listings?category=Cultural">
-        <div class="filter">
-        <div><i class="fa-solid fa-fire"></i></div>
-        <p>Cultural</p>
-</div>
-</a>  
-
-<div class="tax-toggle">
-        <div class="form-check-reverse form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-        <label class="form-check-label" for="flexSwitchCheckDefault">Display total taxes</label>
-</div>
-</div>
+  <div class="tax-toggle">
+    <div class="form-check-reverse form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+      <label class="form-check-label" for="flexSwitchCheckDefault">Display total taxes</label>
+    </div>
+  </div>
 </div>
 
-
-<div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-1 mt-3">
+<div class="rows row-cols-lg-4 row-cols-md-3 row-cols-sm-1 mt-3">
   <% for(let listing of allListings) { %>
-    <div class="col mb-4">
+    <div class="cols mb-4">
       <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark" onclick="animateCard(this)">
         <div class="card card-underline">
-          <!-- 🖼️ Listing Image -->
-          <img 
-            src="<%= listing.image.url %>"
-            class="card-img-top"
-            alt="listing_image"
-          >
+
+          <!-- 🖼️ Main Listing Image (पहिलो image देखाउने) -->
+          <% if (listing.image && listing.image.length > 0) { %>
+            <img 
+              src="<%= listing.image[0].url %>" 
+              alt="listing image"
+              class="card-img-top"
+            >
+          <% } else { %>
+            <!-- यदि image छैन भने placeholder image -->
+            <img 
+              src="/images/placeholder.png" 
+              alt="No image available" 
+              class="card-img-top"
+            >
+          <% } %>
 
           <!-- ❤️ Favorite Button -->
           <button 
@@ -160,10 +162,9 @@
       icon.classList.add("fa-regular");
     }
 
-    // Optional: Send to backend
+    // Send toggle favorite request to backend
     const id = btn.dataset.id;
-    fetch(`/favorites/toggle/${id}`, { method: "POST" });
+    fetch(`/favorites/toggle/${id}`, { method: "POST" })
+      .catch(err => console.error("Error toggling favorite:", err));
   }
 </script>
-
-

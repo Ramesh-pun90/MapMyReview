@@ -3,10 +3,10 @@ const router = express.Router();
 const adminController = require("../controllers/admin.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
-const { isAdmin,isReviewAuthor } = require("../middleware.js");
-const multer= require("multer");
-const {storage}=require("../cloudConfig.js");
-const upload=multer({ storage });
+const { isAdmin, isReviewAuthor } = require("../middleware.js");
+const multer = require("multer");
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 
 // Signup
 router.get("/signup", adminController.renderAdminSignup);
@@ -35,18 +35,28 @@ router.get("/listings/:id", wrapAsync(adminController.showListingDetails));
 // Edit listing form
 router.get("/listings/:id/edit", isAdmin, wrapAsync(adminController.renderEditForm));
 
-// Update listing
-router.put("/listings/:id", isAdmin,upload.single("image"), wrapAsync(adminController.updateListing));
+// Update listing - changed to upload.array for multiple images
+router.put(
+  "/listings/:id",
+  isAdmin,
+  upload.array("image", 5),  // allow up to 5 images uploaded at once
+  wrapAsync(adminController.updateListing)
+);
 
 // Delete listing
 router.delete("/listings/:id", isAdmin, wrapAsync(adminController.deleteListing));
 
-//admin delete review
+// Admin delete review
 router.delete(
   "/listings/:id/reviews/:reviewId",
   isReviewAuthor,
   wrapAsync(adminController.destroyReview)
 );
 
+router.delete(
+  '/listings/:id/images/:filename', 
+  isAdmin, 
+  wrapAsync(adminController.deleteListingImage)
+);
 
 module.exports = router;

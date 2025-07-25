@@ -9,13 +9,13 @@ const {storage}=require("../cloudConfig.js");
 const upload=multer({ storage });
 
 
-// index route and create route
+// index route
 router.route("/")
 .get(
     wrapAsync(listingController.index))
-.post(
+.post(//add new listing//
     isLoggedIn,
-    upload.single('listing[image]'),
+    upload.array('listing[image]',5),
     validateListing,
     wrapAsync(listingController.createListing));
 
@@ -31,7 +31,7 @@ router
 .put
     (isLoggedIn,
     isOwner,
-    upload.single('listing[image]'),
+    upload.array('listing[image]',5),
     validateListing,
     wrapAsync(listingController.updateListing))
 .delete
@@ -59,6 +59,13 @@ router.get("/test-map", (req, res) => {
   res.render("listings/testMap", { maptilerKey: process.env.MAPTILER_API_KEY });
 });
 
+// individual image delete route
+router.delete(
+  "/:id/image/:imageId",
+  isLoggedIn,
+  isOwner,
+  wrapAsync(listingController.deleteImage)
+);
 
 module.exports=router;
 

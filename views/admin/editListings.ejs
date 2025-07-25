@@ -22,14 +22,32 @@
         </div>
       </div>
 
-      <div class="mb-3">
-        Original Listing Image:<br>
-        <img src="<%= originalImageUrl %>" class="image-update" style="max-width: 300px;">
-      </div>
+      <!-- Existing Images Section -->
+      <% if (listing.images && listing.images.length > 0) { %>
+        <div class="mb-3">
+          <label class="form-label">Current Images</label><br>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <% listing.images.forEach(img => { %>
+              <div style="position: relative; max-width: 150px;">
+                <img src="<%= img.url %>" alt="listing image" style="width: 100%; border-radius: 6px; object-fit: cover; height: 100px;">
+                <div style="text-align: center; margin-top: 5px;">
+                  <input type="checkbox" name="deleteImages" value="<%= img.filename %>" id="del-<%= img.filename %>">
+                  <label for="del-<%= img.filename %>" style="font-size: 0.85rem; cursor: pointer;">Delete</label>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="mb-3">
+          <p>No images uploaded yet.</p>
+        </div>
+      <% } %>
 
+      <!-- Upload New Images -->
       <div class="mb-3">
-        <label for="image" class="form-label">Upload New Image</label>
-        <input name="image" id="image" type="file" class="form-control" accept="image/*">
+        <label for="image" class="form-label">Upload New Images (You can select multiple)</label>
+        <input name="image" id="image" type="file" class="form-control" accept="image/*" multiple>
       </div>
 
       <div class="row">

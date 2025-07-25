@@ -9,10 +9,12 @@ title: {
 },
 description: String,
 
-image: {
+image: [
+  {
     url: String,           
     filename: String,
-},
+}
+],
 
     price: Number,
     location: String,

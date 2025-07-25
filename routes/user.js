@@ -27,10 +27,9 @@ router.get("/profile/edit", isLoggedIn, userController.renderEditProfile);
 router.put("/profile", isLoggedIn, userController.uploadProfileImage, userController.updateProfile);
 router.get("/profile/favorites", isLoggedIn, wrapAsync(userController.renderFavorites));
 router.get("/profile/my-listings", isLoggedIn, userController.renderUserListings);
-
-
-
 router.get("/logout", userController.logout);
+router.get("/users/:id", wrapAsync(userController.viewPublicProfile));
+
 
 
 

@@ -116,6 +116,15 @@ module.exports.renderUserListings = async (req, res) => {
   res.render("users/myListings", { listings });
 };
 
+// controllers/users.js
+module.exports.viewPublicProfile = async (req, res) => {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+        req.flash("error", "User not found.");
+        return res.redirect("/listings");
+    }
+    res.render("users/showPublicProfile", { user });
+};
 
 
 

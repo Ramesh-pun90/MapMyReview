@@ -3,13 +3,14 @@ const passport = require("passport");
 const Listing = require("../models/Listing.js");
 const Review = require("../models/review.js");
 const axios = require("axios");
+const cloudinary = require("cloudinary").v2;
 
-// ✅ Render admin signup form
+// Render Admin Signup form
 module.exports.renderAdminSignup = (req, res) => {
   res.render("admin/signup.ejs");
 };
 
-// ✅ Handle admin signup logic
+// Admin Signup logic with admin secret verification
 module.exports.adminSignUp = async (req, res, next) => {
   try {
     const { username, email, password, adminSecret } = req.body;
@@ -32,18 +33,18 @@ module.exports.adminSignUp = async (req, res, next) => {
   }
 };
 
-// ✅ Render admin login form
+// Render Admin Login form
 module.exports.renderAdminLogin = (req, res) => {
   res.render("admin/login.ejs");
 };
 
-// ✅ Handle admin login
+// Admin login handler (passport local)
 module.exports.adminLogin = (req, res) => {
   req.flash("success", "Welcome back Admin!");
   res.redirect("/admin/listings");
 };
 
-// ✅ Admin logout
+// Admin logout handler
 module.exports.adminLogout = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
@@ -52,13 +53,13 @@ module.exports.adminLogout = (req, res, next) => {
   });
 };
 
-// ✅ Show all listings with owner info
+// Show all listings with owner populated
 module.exports.showAllListings = async (req, res) => {
   const allListings = await Listing.find({}).populate("owner");
   res.render("admin/listings.ejs", { allListings });
 };
 
-// ✅ Show individual listing with map + reviews
+// Show single listing details with owner, reviews & authors populated
 module.exports.showListingDetails = async (req, res) => {
   const { id } = req.params;
 
@@ -76,11 +77,11 @@ module.exports.showListingDetails = async (req, res) => {
 
   res.render("admin/ListingsDetails", {
     listing,
-    maptilerKey: process.env.MAPTILER_API_KEY, // Make sure to pass this to EJS
+    maptilerKey: process.env.MAPTILER_API_KEY,
   });
 };
 
-// ✅ Render edit form
+// Render edit form with current listing info and categories
 module.exports.renderEditForm = async (req, res) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
@@ -90,79 +91,138 @@ module.exports.renderEditForm = async (req, res) => {
     return res.redirect("/admin/listings");
   }
 
-  const originalImageUrl = listing.image?.url || "";
-  const categories = Listing.schema.path("category").enumValues;
+  const categories = Listing.schema.path("category")?.enumValues || [];
 
   res.render("admin/editListings.ejs", {
     listing,
     categories,
-    originalImageUrl,
   });
 };
 
-// ✅ Update listing
-// module.exports.updateListing = async (req, res) => {
-//   const { id } = req.params;
-//   const updatedData = { ...req.body.listing };
-
-//   if (req.file) {
-//     updatedData.image = {
-//       url: req.file.path,
-//       filename: req.file.filename,
-//     };
-//   }
-
-//   await Listing.findByIdAndUpdate(id, updatedData);
-//   req.flash("success", "Listing updated");
-//   res.redirect("/admin/listings");
-// };
+// Update listing including multiple images upload, geocode, delete images, set mainImage
 module.exports.updateListing = async (req, res) => {
-  const { id } = req.params;
-  const updatedData = { ...req.body.listing };
+  try {
+    const { id } = req.params;
+    const updatedData = { ...req.body.listing };
 
-  // Geocode if location changed or exists
-  if (updatedData.location && updatedData.country) {
-    try {
-      const geoUrl = `https://api.maptiler.com/geocoding/${encodeURIComponent(updatedData.location + ", " + updatedData.country)}.json?key=${process.env.MAPTILER_API_KEY}`;
-      const geoRes = await axios.get(geoUrl);
-      if (geoRes.data.features.length > 0) {
-        const [lng, lat] = geoRes.data.features[0].center;
-        updatedData.lat = lat;
-        updatedData.lng = lng;
+    // Geocode location + country to get lat/lng (optional)
+    if (updatedData.location && updatedData.country) {
+      try {
+        const geoUrl = `https://api.maptiler.com/geocoding/${encodeURIComponent(
+          updatedData.location + ", " + updatedData.country
+        )}.json?key=${process.env.MAPTILER_API_KEY}`;
+        const geoRes = await axios.get(geoUrl);
+        if (geoRes.data.features.length > 0) {
+          const [lng, lat] = geoRes.data.features[0].center;
+          updatedData.lat = lat;
+          updatedData.lng = lng;
+        }
+      } catch (err) {
+        req.flash("error", "Could not geocode location");
+        return res.redirect(`/admin/listings/${id}/edit`);
       }
-    } catch (err) {
-      req.flash("error", "Could not geocode location");
-      return res.redirect(`/listings/${id}/edit`);
     }
-  }
 
-  let listing = await Listing.findByIdAndUpdate(id, updatedData, { new: true });
+    // DB बाट पुरा listing ल्याउनु
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      req.flash("error", "Listing भेटिएन");
+      return res.redirect("/admin/listings");
+    }
 
-  if (req.file) {
-    listing.image = {
-      url: req.file.path,
-      filename: req.file.filename,
-    };
+    // Update fields manually assign गर्नुस्
+    for (let key in updatedData) {
+      listing[key] = updatedData[key];
+    }
+
+    // नयाँ images थप्नु (upload files बाट)
+    if (req.files && req.files.length > 0) {
+      const newImages = req.files.map((f) => ({
+        url: f.path,
+        filename: f.filename,
+      }));
+      if (!listing.image) listing.image = [];
+      listing.image.push(...newImages);
+    }
+
+    // Delete गरिएका images Cloudinary र DB बाट हटाउनु
+    if (req.body.deleteImages) {
+      const deleteImages = Array.isArray(req.body.deleteImages)
+        ? req.body.deleteImages
+        : [req.body.deleteImages];
+
+      for (let filename of deleteImages) {
+        await cloudinary.uploader.destroy(filename);
+        listing.image = listing.image.filter((img) => img.filename !== filename);
+      }
+    }
+
+    // Main image update (optional)
+    if (req.body.mainImage) {
+      const mainImg = listing.image.find((img) => img.filename === req.body.mainImage);
+      if (mainImg) {
+        listing.mainImage = mainImg;
+      }
+    }
+
     await listing.save();
-  }
 
-  req.flash("success", "Listing updated..!");
-  res.redirect(`/listings/${id}`);
+    req.flash("success", "Listing updated successfully!");
+    res.redirect(`/admin/listings/${id}`);
+  } catch (e) {
+    console.log(e);
+    req.flash("error", "Something went wrong");
+    res.redirect("/admin/listings");
+  }
 };
 
-// ✅ Delete listing
+// Delete entire listing + all images in Cloudinary
 module.exports.deleteListing = async (req, res) => {
   const { id } = req.params;
+  const listing = await Listing.findById(id);
+
+  if (!listing) {
+    req.flash("error", "Listing not found");
+    return res.redirect("/admin/listings");
+  }
+
+  for (let img of listing.image) {
+    await cloudinary.uploader.destroy(img.filename);
+  }
+
   await Listing.findByIdAndDelete(id);
+
   req.flash("success", "Listing deleted");
   res.redirect("/admin/listings");
 };
 
+// Delete individual review by admin
+module.exports.destroyReview = async (req, res) => {
+  const { id, reviewId } = req.params;
+  await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+  await Review.findByIdAndDelete(reviewId);
+  req.flash("success", "Deleted review!");
+  res.redirect(`/admin/listings/${id}`);
+};
 
-module.exports.destroyReview=async(req,res)=>{
-    let{id,reviewId}=req.params;
-    await Listing.findByIdAndUpdate(id,{$pull: {reviews: reviewId}});
-    await Review.findByIdAndDelete(reviewId);
-    req.flash("success","Deleted review..!");
-    res.redirect(`/listings/${id}`);
-}
+// Delete individual image from listing (Cloudinary + DB)
+module.exports.deleteListingImage = async (req, res) => {
+  const { id, filename } = req.params;
+
+  const listing = await Listing.findById(id);
+  if (!listing) {
+    req.flash("error", "Listing not found");
+    return res.redirect("/admin/listings");
+  }
+
+  // Delete image from Cloudinary
+  await cloudinary.uploader.destroy(filename);
+
+  // Remove image from listing.image array
+  listing.image = listing.image.filter((img) => img.filename !== filename);
+
+  await listing.save();
+
+  req.flash("success", "Image deleted successfully");
+  res.redirect(`/admin/listings/${id}`);
+};
