@@ -1,160 +1,168 @@
-<% layout("layouts/boilerplate") %>
-
-<style>
-  /* Navbar को search bar लाई signup/admin signup page को styling बाट असर नपार्न यो CSS जरूरी */
-  nav .form-control,
-  nav input[type="search"] {
-    all: unset !important;
-    box-sizing: border-box;
-    width: 100%;
-  }
-
-  body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #121212;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-
-  main {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 1rem;
-  }
-
-  .signup-wrapper {
-    position: relative;
-    background: #1b1b1b;
-    border-radius: 1.5rem;
-    padding: 3rem 3.5rem;
-    width: 100%;
-    max-width: 430px;
-    color: #fff;
-    box-shadow:
-      0 0 15px rgba(255, 140, 0, 0.7),
-      inset 0 0 15px rgba(255, 140, 0, 0.5);
-    border: 1.8px solid #ff8c00;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  /* Moon-like glowing orb top right corner */
-  .signup-wrapper::before {
-    content: "";
-    position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 180px;
-    height: 180px;
-    background: radial-gradient(circle at center, rgba(255, 223, 186, 0.8), rgba(255, 223, 186, 0.1) 70%);
-    border-radius: 50%;
-    filter: blur(40px);
-    animation: moonGlowMove 8s ease-in-out infinite alternate;
-    z-index: 0;
-  }
-
-  @keyframes moonGlowMove {
-    0% {
-      opacity: 0.9;
-      transform: translate(0, 0) scale(1);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Signup</title>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #121212;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-    50% {
-      opacity: 0.6;
-      transform: translate(-10px, 8px) scale(1.05);
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
     }
-    100% {
-      opacity: 0.9;
-      transform: translate(0, 0) scale(1);
+
+    .signup-wrapper {
+      position: relative;
+      background: #1b1b1b;
+      border-radius: 1.5rem;
+      padding: 3rem 3.5rem;
+      width: 100%;
+      max-width: 430px;
+      color: #fff;
+      box-shadow:
+        0 0 15px rgba(255, 140, 0, 0.7),
+        inset 0 0 15px rgba(255, 140, 0, 0.5);
+      border: 1.8px solid #ff8c00;
+      overflow: hidden;
+      z-index: 1;
     }
-  }
 
-  h3 {
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 1.8rem;
-    color: #fff;
-    text-shadow: 0 0 8px rgba(255, 140, 0, 0.9);
-    position: relative;
-    z-index: 2;
-  }
+    .signup-wrapper::before {
+      content: "";
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle at center, rgba(255, 223, 186, 0.8), rgba(255, 223, 186, 0.1) 70%);
+      border-radius: 50%;
+      filter: blur(40px);
+      animation: moonGlowMove 8s ease-in-out infinite alternate;
+      z-index: 0;
+    }
 
-  .form-label {
-    font-weight: 600;
-    color: #f0f0f0;
-    position: relative;
-    z-index: 2;
-  }
+    @keyframes moonGlowMove {
+      0% { opacity: 0.9; transform: translate(0, 0) scale(1); }
+      50% { opacity: 0.6; transform: translate(-10px, 8px) scale(1.05); }
+      100% { opacity: 0.9; transform: translate(0, 0) scale(1); }
+    }
 
-  .form-control {
-    border-radius: 10px;
-    padding: 0.65rem;
-    font-size: 0.95rem;
-    box-shadow: none !important;
-    border: 1.5px solid #ff8c00;
-    background-color: #2a2a2a;
-    color: #eee;
-    transition: border-color 0.3s ease;
-    position: relative;
-    z-index: 2;
-  }
-  .form-control:focus {
-    border-color: #ffa500;
-    outline: none;
-    box-shadow: 0 0 10px #ffa500;
-    background-color: #3b3b3b;
-  }
+    h3 {
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #fff;
+      text-shadow: 0 0 8px rgba(255, 140, 0, 0.9);
+      position: relative;
+      z-index: 2;
+    }
 
-  .btn-primary {
-    width: 100%;
-    padding: 0.7rem;
-    font-weight: 700;
-    border-radius: 10px;
-    background-color: #ff8c00;
-    border: none;
-    color: #fff;
-    font-size: 1.05rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    z-index: 2;
-  }
-  .btn-primary:hover {
-    background-color: #ffa500;
-    box-shadow: 0 0 15px #ffa500;
-  }
-</style>
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 2;
+      animation: fadeUp 0.5s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-<main>
-  <div class="signup-wrapper">
-    <h3>Admin Signup</h3>
+    .form-label {
+      font-weight: 600;
+      color: #f0f0f0;
+      margin-bottom: 0.5rem;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
 
-    <form action="/admin/signup" method="POST" class="needs-validation" novalidate>
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input name="username" id="username" type="text" class="form-control" required>
-        <div class="valid-feedback">Looks good!</div>
-      </div>
+    .form-control {
+      width: 50%;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1.5px solid #ff8c00;
+      background-color: #2a2a2a;
+      color: #eee;
+      transition: all 0.35s ease;
+      text-align: center;
+    }
 
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input name="email" id="email" type="email" class="form-control" required>
-      </div>
+    .form-control:focus {
+      border-color: #ffa500;
+      outline: none;
+      box-shadow: 0 0 12px #ffa500, 0 0 20px rgba(255, 140, 0, 0.6);
+      background-color: #3b3b3b;
+      transform: scale(1.015);
+    }
 
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input name="password" id="password" type="password" class="form-control" required>
-      </div>
+    .btn-primary {
+      width: 50%;
+      padding: 0.75rem;
+      font-weight: 700;
+      border-radius: 10px;
+      background-color: #ff8c00;
+      border: none;
+      color: #fff;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      display: block;
+      margin: 0 auto;
+    }
 
-      <div class="mb-3">
-        <label for="adminSecret" class="form-label">Admin Secret</label>
-        <input name="adminSecret" id="adminSecret" type="password" class="form-control" required>
-      </div>
+    .btn-primary:hover {
+      background-color: #ffa500;
+      box-shadow: 0 0 15px #ffa500;
+      transform: scale(1.02);
+    }
 
-      <button class="btn btn-primary">Sign Up</button>
-    </form>
-  </div>
-</main>
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="signup-wrapper">
+      <h3>Admin Signup</h3>
+      <form action="/admin/signup" method="POST" class="needs-validation" novalidate>
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <input name="username" id="username" type="text" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input name="email" id="email" type="email" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input name="password" id="password" type="password" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label for="adminSecret" class="form-label">Admin Secret</label>
+          <input name="adminSecret" id="adminSecret" type="password" class="form-control" required />
+        </div>
+
+        <button class="btn-primary" type="submit">Sign Up</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
+

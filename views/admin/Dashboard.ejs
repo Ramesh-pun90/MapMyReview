@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Wanderlust</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset and base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+  background: linear-gradient(to right, #e0f7fa, #e6fffa);
+  color: #333;
+  display: flex;
+  min-height: 100vh;
+  
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #0284c7 0%, #0f172a 100%);
+  color: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 30px;
+  position: fixed;
+  height: 100%;
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+}
+
+.sidebar h2 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  margin-bottom: 50px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* Nav links */
+.nav-link {
+  color: #e2e8f0;
+  text-decoration: none;
+  margin-bottom: 22px;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  background-color: #bae6fd;
+  color: #0f172a;
+  font-weight: 700;
+  transform: translateX(6px);
+}
+
+/* Main container */
+.main {
+  margin-left: 260px;
+  flex: 1;
+  padding: 50px 60px;
+  background: #f8fafc;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* Top bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.header {
+  font-size: 34px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 1.2px;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-weight: 600;
+  font-size: 18px;
+  color: #475569;
+}
+
+.admin-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0ea5e9;
+  box-shadow: 0 0 0 3px #e0f2fe;
+}
+
+/* Cards grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.card {
+  background: white;
+  padding: 28px 30px;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+.card-value {
+  font-size: 40px;
+  font-weight: 900;
+  color: #0284c7;
+  letter-spacing: 1px;
+}
+
+/* Reports */
+.report-section {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  max-width: 900px;
+  margin: 0 auto 60px auto;
+}
+
+.report-section h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 25px;
+}
+
+.report-list {
+  list-style: none;
+}
+
+.report-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 16px;
+  color: #475569;
+  transition: background-color 0.3s ease;
+}
+
+.report-list li:last-child {
+  border-bottom: none;
+}
+
+.report-list li:hover {
+  background-color: #f0f9ff;
+  border-radius: 8px;
+  color: #0284c7;
+  font-weight: 600;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 14px;
+  padding: 25px 0;
+  max-width: 900px;
+  margin: 0 auto 30px auto;
+  border-top: 1px solid #cbd5e1;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .main {
+    margin-left: 0;
+    padding: 40px 20px;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    font-size: 24px;
+  }
+
+  .card-value {
+    font-size: 28px;
+  }
+
+  .report-section {
+    padding: 30px 20px;
+  }
+
+  .report-list li {
+    font-size: 15px;
+  }
+}
+
+   </style>
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="/admin/Dashboard" class="nav-link">Dashboard</a>
+    <a href="/admin/listings" class="nav-link">Manage Listings</a>
+        <a href="/admin/listings" class="nav-link">Manage Reviews</a>
+
+    <a href="/admin/user" class="nav-link">Manage Users</a>
+    <a href="/admin/reports" class="nav-link">Reports</a>
+    <a href="/admin/settings" class="nav-link">Settings</a>
+    <a href="/admin/logout" class="nav-link">Logout</a>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+    <div class="top-bar">
+      <h1 class="header">Welcome to Wanderlust Admin</h1>
+      <div class="admin-profile">
+        <img src="https://i.pravatar.cc/150?img=12" alt="Admin Profile" />
+        <span class="admin-name">Admin</span>
+      </div>
+    </div>
+
+    <!-- Dashboard Cards -->
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Total Listings</div>
+        <div class="card-value"><%= totalListings %></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Total Users</div>
+        <div class="card-value"><%= totalUsers %></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Total Reviews</div>
+        <div class="card-value"><%= totalReviews %></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Recently Added (last 7 days)</div>
+        <div class="card-value"><%= recentListings %></div>
+      </div>
+      <div class="card">
+        <div class="card-title">New Signups (last 7 days)</div>
+        <div class="card-value"><%= newSignups %></div>
+      </div>
+    </div>
+
+    <!-- Reports Section -->
+    <section class="report-section">
+      <h2>Recent Reports & Feedback</h2>
+      <ul class="report-list">
+        <li>🏞️ Listing "Everest View Point" was reported for inaccurate location.</li>
+        <li>🧳 Review by user "john_doe" flagged as inappropriate.</li>
+        <li>🗺️ Listing "Pokhara Adventure" has 10+ reviews pending approval.</li>
+        <li>📷 User "sita123" uploaded suspicious images.</li>
+        <li>📢 Feedback received: "Add more destinations in Mustang region."</li>
+      </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      &copy; 2025 Wanderlust Admin. All rights reserved.
+    </footer>
+  </main>
+</body>
+
+</html>

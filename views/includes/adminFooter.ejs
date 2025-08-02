@@ -1,0 +1,52 @@
+<footer class="admin-footer">
+  <div class="admin-footer-container">
+    <div class="footer-left">
+      <p>&copy; <%= new Date().getFullYear() %> Wanderlust Admin Panel. All rights reserved.</p>
+      <p>Managing travel destinations and user content efficiently.</p>
+    </div>
+    <div class="footer-right">
+      <a href="https://yourwebsite.com/about" target="_blank">About</a>
+      <a href="https://yourwebsite.com/privacy" target="_blank">Privacy</a>
+      <a href="https://yourwebsite.com/contact" target="_blank">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .admin-footer {
+    background-color: #1e293b;
+    color: #cbd5e1;
+    padding: 1.5rem 2rem;
+    font-family: 'Poppins', sans-serif;
+    border-top: 1px solid #334155;
+    margin-top: auto;
+  }
+
+  .admin-footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-left p {
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .footer-right a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+  }
+
+  .footer-right a:hover {
+    color: #38bdf8;
+  }
+</style>

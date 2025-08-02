@@ -1,0 +1,62 @@
+  <% layout("layouts/AdminBoilerplate") %>
+
+  <style>
+    body {
+      background: #f5f7fa;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+    .profile-card {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .profile-card h2 {
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: #0ea5e9;
+    }
+    .profile-card h4 {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .profile-card p {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    .btn-block {
+      width: 100%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="profile-card">
+    <h2>User Profile</h2>
+    <h4><%= user.userProfile?.name || user.username %></h4>
+    <p><strong>Email:</strong> <%= user.email %></p>
+    <p><strong>Age:</strong> <%= user.userProfile?.age || "Not set" %></p>
+    <p><strong>Status:</strong> <%= user.isBlocked ? "Blocked" : "Active" %></p>
+
+    <form method="POST" action="/admin/users/<%= user._id %>/block?_method=PUT">
+      <button type="submit" class="btn btn-warning btn-block">
+        <%= user.isBlocked ? "Unblock User" : "Block User" %>
+      </button>
+    </form>
+
+    <form method="POST" action="/admin/users/<%= user._id %>?_method=DELETE">
+      <button type="submit" class="btn btn-danger btn-block mt-2">
+        Delete User
+      </button>
+    </form>
+  </div>
+
+

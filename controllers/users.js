@@ -1,5 +1,7 @@
 const User = require("../models/user.js");
 const Listing = require("../models/Listing.js"); // ✅ यो लाइन थप्न नबिर्सनुहोस्
+const Report = require('../models/Report');
+
 
 
 const multer = require('multer');
@@ -40,6 +42,8 @@ module.exports.login = async (req, res) => {
   req.flash("success", "Welcome back to Wanderlust!");
   const redirectUrl = res.locals.redirectUrl || "/listings";
   res.redirect(redirectUrl);
+
+  
 };
 
 // Logout logic
@@ -125,8 +129,4 @@ module.exports.viewPublicProfile = async (req, res) => {
     }
     res.render("users/showPublicProfile", { user });
 };
-
-
-
-
 

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Wanderlust</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      background-size: 600% 600%;
+      animation: backgroundShift 20s ease infinite;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #f4f4f4;
+      overflow: hidden;
+    }
+
+    @keyframes backgroundShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .container {
+      position: relative;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2rem;
+      padding: 60px 40px;
+      width: 90%;
+      max-width: 460px;
+      text-align: center;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 10;
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 40px;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    @media (min-width: 480px) {
+      .button-group {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 16px 32px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 50px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .signup-btn {
+      background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
+      color: #111;
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%);
+      color: #fff;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .btn:hover .icon {
+      transform: scale(1.2);
+    }
+
+    .userListings {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .explore {
+      background-color: #fff;
+      color: #111;
+      padding: 10px 22px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+
+    .explore:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="userListings">
+    <a class="explore" href="/listings">
+      <i class="fas fa-compass"></i> Explore Listings
+    </a>
+  </div>
+
+  <div class="container" role="main" aria-label="Admin Panel welcome page">
+    <h1 class="title">Welcome to Admin Panel</h1>
+    <div class="button-group">
+      <a href="/admin/signup" class="btn signup-btn" role="button" aria-label="Admin Signup">
+        <i class="fas fa-user-plus icon" aria-hidden="true"></i> Signup
+      </a>
+      <a href="/admin/login" class="btn login-btn" role="button" aria-label="Admin Login">
+        <i class="fas fa-sign-in-alt icon" aria-hidden="true"></i> Login
+      </a>
+    </div>
+  </div>
+
+</body>
+
+</html>

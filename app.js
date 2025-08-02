@@ -13,12 +13,15 @@ const listingRouter=require("./routes/listing.js");
 const reviewRouter=require("./routes/review.js");
 const userRouter=require("./routes/user.js");
 const adminRoutes = require("./routes/admin.js");
+const reportRoutes = require('./routes/reports');
+
 const session=require("express-session");
 const MongoStore=require("connect-mongo");
 const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
 const User=require("./models/user.js");
+
 
 app.engine("ejs",ejsMate);
 app.set("view engine", "ejs");
@@ -118,6 +121,8 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/", userRouter);
 app.use("/admin", adminRoutes);
+app.use('/reports', reportRoutes);
+
 
 
 

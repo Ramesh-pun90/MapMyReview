@@ -1,0 +1,269 @@
+<% layout("layouts/AdminBoilerplate") %>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    color: #1e293b;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 3rem auto 6rem;
+    padding: 1.5rem 1.8rem;
+    background-color: #fefefe;
+    border-radius: 16px;
+    border: 1px solid #e0e7ff;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.05);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .container:hover {
+    box-shadow: 0 10px 30px rgb(37 99 235 / 0.15);
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 2.3rem;
+    text-align: center;
+    color: #1e3a8a;
+    margin-bottom: 2rem;
+    letter-spacing: 0.07em;
+  }
+
+  .listing-report-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.07);
+    border: 1px solid #dbeafe;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .listing-report-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgb(59 130 246 / 0.25);
+    border-color: #2563eb;
+  }
+
+  .listing-report-card h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.5rem;
+    color: #2563eb;
+  }
+
+  .listing-report-card h3 a {
+    color: #2563eb;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.25s ease;
+  }
+
+  .listing-report-card h3 a:hover {
+    border-color: #3b82f6;
+  }
+
+  p, ul {
+    color: #475569;
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+  }
+
+  ul {
+    padding-left: 1.3rem;
+    list-style-type: disc;
+  }
+
+  ul li {
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+  }
+
+  form button {
+    background-color: #2563eb;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    color: white;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    box-shadow: 0 4px 12px rgb(37 99 235 / 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  }
+
+  form button:hover {
+    background-color: #1e40af;
+    box-shadow: 0 8px 25px rgb(37 99 235 / 0.8);
+    transform: scale(1.05);
+  }
+
+  .no-reports {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #94a3b8;
+    margin-top: 4rem;
+  }
+
+  /* Accordion button */
+  .accordion-btn {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 22px;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.8rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .accordion-btn:hover {
+    background-color: #1e40af;
+  }
+
+  /* Accordion content hidden by default */
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    background-color: #f9fafb;
+    border-radius: 12px;
+    padding: 0 16px;
+    margin-bottom: 1rem;
+  }
+
+  /* Open state for accordion content */
+  .accordion-content.open {
+    max-height: 1000px;
+    padding: 1rem 16px;
+  }
+
+  .reason-section h4 {
+    margin-top: 1rem;
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  .reason-section ul {
+    padding-left: 1.4rem;
+  }
+
+  .reason-section li {
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    color: #475569;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .container {
+      max-width: 95%;
+      padding: 1.2rem 1rem;
+      margin: 2rem auto 4rem;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+    }
+
+    .listing-report-card h3 {
+      font-size: 1.15rem;
+    }
+
+    p, ul {
+      font-size: 0.9rem;
+    }
+
+    form button, .accordion-btn {
+      width: 100%;
+      padding: 12px 0;
+      font-size: 1.05rem;
+    }
+  }
+</style>
+<% layout("layouts/AdminBoilerplate") %>
+
+<style>
+  /* ... (तिमीले दिएको CSS unchanged) ... */
+</style>
+
+<div class="container">
+  <h1>Top Reported Listings</h1>
+
+  <% if (!reports || reports.length === 0) { %>
+    <p class="no-reports">No reported listings found.</p>
+  <% } else { %>
+    <% reports.forEach(reportGroup => { %>
+      <div class="listing-report-card">
+        <h3>
+          <a href="/listings/<%= reportGroup.targetId %>"><%= reportGroup.listing?.title || "Listing Deleted" %></a>
+        </h3>
+        <p><strong>Total Reports:</strong> <%= reportGroup.count %></p>
+
+        <button class="accordion-btn" type="button">
+          Unique Reasons (<%= reportGroup.uniqueReasons.length %>)
+        </button>
+
+        <div class="accordion-content">
+          <% reportGroup.uniqueReasons.forEach(reason => { %>
+            <div class="reason-section">
+              <h4><%= reason %></h4>
+              <ul>
+                <% reportGroup.reports.filter(r => r.reason === reason).forEach(r => { %>
+                  <li>
+                    <strong>Reporter ID:</strong> <%= r.reporter %> - 
+                    <strong>Status:</strong> <%= r.status %> - 
+                    <em><%= new Date(r.createdAt).toLocaleString() %></em>
+
+                    <!-- Dismiss Report Form -->
+                    <% if (r.status !== 'dismissed') { %>
+                    <form method="POST" action="/admin/reports/<%= r._id %>/dismiss?_method=PUT" style="display:inline-block; margin-left: 10px;">
+                      <button type="submit" style="background:#fbbf24; color:#1f2937; font-weight:bold; padding:4px 8px; border-radius:6px; border:none; cursor:pointer;">
+                        Dismiss
+                      </button>
+                    </form>
+                    <% } %>
+
+                    <!-- Resolve Report Form -->
+                    <% if (r.status !== 'resolved') { %>
+                    <form method="POST" action="/admin/reports/<%= r._id %>/resolve?_method=PUT" style="display:inline-block; margin-left: 5px;">
+                      <button type="submit" style="background:#22c55e; color:white; font-weight:bold; padding:4px 8px; border-radius:6px; border:none; cursor:pointer;">
+                        Resolve
+                      </button>
+                    </form>
+                    <% } %>
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
+          <% }) %>
+        </div>
+
+        <p><strong>Status Summary:</strong></p>
+        <ul>
+          <li>Pending: <%= reportGroup.statusCounts.pending || 0 %></li>
+          <li>Dismissed: <%= reportGroup.statusCounts.dismissed || 0 %></li>
+          <li>Resolved: <%= reportGroup.statusCounts.resolved || 0 %></li>
+        </ul>
+
+        <form method="POST" action="/admin/reports/<%= reportGroup.targetId %>/listing/delete?_method=DELETE" onsubmit="return confirm('Delete this listing and mark all related reports as resolved?');">
+          <button type="submit">Delete Listing & Resolve Reports</button>
+        </form>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+
+<script>
+  document.querySelectorAll('.accordion-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const content = button.nextElementSibling;
+      content.classList.toggle('open');
+    });
+  });
+</script>

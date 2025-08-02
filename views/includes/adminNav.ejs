@@ -1,0 +1,83 @@
+<style>
+  .admin-navbar {
+    background: #1e293b;
+    padding: 1rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+
+  .admin-navbar h2 {
+    color: #f8fafc;
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.6rem;
+    letter-spacing: 0.5px;
+  }
+
+  .admin-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .admin-nav-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    position: relative;
+    padding: 0.3rem 0;
+    transition: color 0.3s ease;
+  }
+
+  .admin-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: #38bdf8;
+    transition: width 0.3s ease;
+  }
+
+  .admin-nav-link:hover {
+    color: #38bdf8;
+  }
+
+  .admin-nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Responsive (Optional) */
+  @media (max-width: 768px) {
+    .admin-navbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .admin-nav-links {
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.8rem;
+    }
+  }
+</style>
+
+<nav class="admin-navbar">
+  <h2>Admin Panel</h2>
+  <div class="admin-nav-links">
+    <a href="/admin/Dashboard" class="admin-nav-link">Dashboard</a>
+    <a href="/admin/listings" class="admin-nav-link">Manage Listings</a>
+    <a href="/admin/user" class="admin-nav-link">Users</a>
+    <a href="#" class="admin-nav-link">Reports</a>
+    <a href="/admin/settings" class="admin-nav-link">Settings</a>
+    <a href="/admin/logout" class="admin-nav-link">Logout</a>
+  </div>
+</nav>

@@ -1,0 +1,29 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container my-5">
+  <h2 class="mb-4">📥 Your Inbox</h2>
+  <% if (messages.length === 0) { %>
+    <div class="alert alert-info">You have no messages.</div>
+  <% } else { %>
+    <table class="table table-bordered shadow-sm rounded bg-white">
+      <thead class="table-light">
+        <tr>
+          <th>From</th>
+          <th>Subject</th>
+          <th>Message</th>
+          <th>Received At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% messages.forEach(msg => { %>
+          <tr class="<%= msg.read ? '' : 'fw-bold' %>">
+            <td><%= msg.sender.username %></td>
+            <td><%= msg.subject %></td>
+            <td><%= msg.body %></td>
+            <td><%= msg.createdAt.toLocaleString() %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>

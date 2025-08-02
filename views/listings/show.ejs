@@ -72,6 +72,84 @@
     color: #ffa000;
     filter: drop-shadow(0 0 3px #ffa000);
   }
+
+  /* Report Form Container */
+form[action="/reports/create"] {
+  max-width: 600px;
+  margin: 2rem auto 3rem auto;
+  padding: 20px 25px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+/* Label */
+form[action="/reports/create"] label {
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #222;
+}
+
+/* Textarea */
+form[action="/reports/create"] textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 2px solid #ddd;
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  color: #444;
+}
+
+form[action="/reports/create"] textarea:focus {
+  outline: none;
+  border-color: #0d6efd; /* Bootstrap primary blue */
+  box-shadow: 0 0 10px rgba(13, 110, 253, 0.4);
+}
+
+/* Submit Button */
+form[action="/reports/create"] button[type="submit"] {
+  margin-top: 1.2rem;
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: #0d6efd; /* Bootstrap primary blue */
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(13, 110, 253, 0.35);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  width: 100%;
+  max-width: 180px;
+  text-align: center;
+  user-select: none;
+}
+
+form[action="/reports/create"] button[type="submit"]:hover {
+  background-color: #094ac4;
+  box-shadow: 0 8px 22px rgba(9, 74, 196, 0.55);
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  form[action="/reports/create"] {
+    padding: 18px 15px;
+  }
+  form[action="/reports/create"] button[type="submit"] {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
   /* Submit button */
   #reviewForm button[type="submit"] {
     border-radius: 50px;
@@ -301,6 +379,17 @@
         </form>
       </div>
     <% } %>
+
+    <!-- listings/show.ejs or reviews partial मा -->
+<form action="/reports/create" method="POST">
+  <input type="hidden" name="type" value="listing" />
+  <input type="hidden" name="targetId" value="<%= listing._id %>" />
+  <label for="reason">Report Reason:</label>
+  <textarea name="reason" id="reason" required></textarea>
+  <button type="submit">Submit Report</button>
+</form>
+
+
 
     <!-- reviews form -->
     <% if (currUser) { %>

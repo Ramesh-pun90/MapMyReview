@@ -1,0 +1,67 @@
+<% layout("layouts/boilerplate") -%>
+
+<style>
+  .inbox-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    font-family: 'Poppins', sans-serif;
+  }
+  .inbox-header {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  .inbox-header h2 {
+    font-weight: 600;
+  }
+  .message-card {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+    border-left: 5px solid #007bff;
+  }
+  .message-card.unread {
+    background-color: #eef6ff;
+    border-left-color: #28a745;
+  }
+  .message-meta {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  .message-body {
+    font-size: 16px;
+    color: #333;
+  }
+</style>
+
+<div class="inbox-container">
+  <div class="inbox-header">
+    <h2>📬 Your Inbox</h2>
+    <p class="text-muted">Messages from Admin</p>
+  </div>
+
+  <% if (messages.length === 0) { %>
+    <div class="alert alert-info text-center">You have no messages.</div>
+  <% } else { %>
+    <% messages.forEach(msg => { %>
+      <div class="message-card <%= msg.read ? '' : 'unread' %>">
+        <div class="message-meta">
+          <strong>From:</strong> <%= msg.sender.username %> &nbsp; | &nbsp;
+          <strong>Received:</strong> <%= msg.createdAt.toLocaleString() %>
+        </div>
+        <div class="message-meta">
+          <strong>Subject:</strong> <%= msg.subject %>
+        </div>
+        <div class="message-body">
+          <%= msg.body %>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
