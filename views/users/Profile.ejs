@@ -1,109 +1,353 @@
 <% layout("layouts/boilerplate") %>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .container-profile {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    color: #000;
+  }
+
+  a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  a:hover {
+    color: #333;
+  }
+
+  .sidebar {
+    width: 240px;
+    background: #ffffffcc;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    padding: 2rem 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .sidebar ul {
+    list-style: none;
+  }
+
+  .sidebar li {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: #000;
+  }
+
+  .sidebar li:hover {
+    color: #0ea5e9;
+    transform: translateX(5px);
+  }
+
+  .sidebar li.active {
+    color: #0ea5e9;
+    font-weight: 700;
+  }
+
+  .sidebar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #0ea5e9;
+  }
+
+  .main-content {
+    flex: 1;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+    max-width: 900px;
+    margin: 0 auto;
+    color: #000;
+  }
+
+ .header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;  /* small space between title and button */
+}
+
+.edit-btn-profile {
+  padding: 0.6rem 1.2rem;
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+  margin-left: 3rem; /* small space to push button right */
+}
+
+   
+  .edit-btn-profile:hover {
+    background: #0284c7;
+  }
+
+  .profile-and-btn {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+ .profile-card {
+  display: flex;
+  flex-direction: column;    /* picture माथि, username तल */
+  align-items: flex-start;   /* बाँया तिर align गराउने */
+  background: #f8fafc;
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+  min-width: 260px;
+  color: #000;
+}
+
+.profile-img {
+  width: 100px;      /* ठूलो */
+  height: 100px;     /* ठूलो */
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #0ea5e9;
+  margin-bottom: 0.8rem;   /* username संग space दिन */
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05); /* 5% opacity - धेरै नै clear */
+  padding: 1.5rem 2rem;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-width: 260px;
+  color: #000;
+}
+
+
+.profile-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #0ea5e9;
+  background-color: white;
+  padding: 2px;
+  margin-bottom: 1rem;
+}
+
+.profile-card h3 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+
+  .completeProfile {
+    background: linear-gradient(to top right, #e0f2fe, #f0f9ff);
+    padding: 1.5rem 2rem;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+    flex: 1;
+  }
+
+  .completeProfile h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .completeProfile p {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    padding: 0.6rem 1.4rem;
+    background: #0ea5e9;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .cta-btn:hover {
+    background: #0284c7;
+    transform: scale(1.05);
+  }
+
+  .dropdown-toggle {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  }
+
+  .dropdown-toggle:hover {
+    background: #cffafe;
+    transform: scale(1.01);
+  }
+
+  .dropdown-toggle.open i {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-toggle i {
+    transition: transform 0.4s ease;
+  }
+
+  .profile-info-dropdown {
+    display: none;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+
+  .profile-info-dropdown.show {
+    display: flex;
+  }
+
+  .profile-info-content {
+    padding: 1rem 1.5rem;
+    background: #f1f5f9;
+    border-radius: 12px;
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .profile-info-content i {
+    color: #0ea5e9;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .container-profile {
+      flex-direction: column;
+      padding: 1rem;
+    }
+
+    .sidebar {
+      width: 100%;
+    }
+
+    .profile-and-btn {
+      flex-direction: column;
+    }
+
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+</style>
+
 <div class="container-profile">
+  <!-- Sidebar -->
   <div class="sidebar">
     <ul>
       <li class="active">
-        <% if(user.userProfile && user.userProfile.image) { %>
-          <img src="<%= user.userProfile.image %>" class="sidebar-img">
+        <% if(user.userProfile?.image) { %>
+          <img src="<%= user.userProfile.image %>" alt="Profile Image" class="sidebar-img" />
         <% } else { %>
           <i class="fa fa-user"></i>
         <% } %>
-        <a href="/profile" style="text-decoration: none;">About me</a>
+        <a href="/profile">About me</a>
       </li>
-      <li class="active"><i class="fa-duotone fa-solid fa-heart"></i><a href="/profile/favorites" style="text-decoration: none;"><span></span> Favorite</a></li>
-      <li class="active"><i class="fa-solid fa-head-side-virus profile"></i><a href="/profile/my-listings" style="text-decoration: none;"><span></span>My Listings</a></li>
-
+      <li><i class="fa fa-heart"></i><a href="/profile/favorites">Favorite</a></li>
+      <li><i class="fa fa-list"></i><a href="/profile/my-listings">My Listings</a></li>
+      <li><i class="fa fa-cog"></i><a href="/user/settings">Settings</a></li>
+      <li><i class="fa fa-envelope"></i><a href="/reports/mailbox">MailBox</a></li>
     </ul>
   </div>
 
+  <!-- Main Content -->
   <div class="main-content">
     <div class="header">
       <h3>About me</h3>
-      <a href="/profile/edit">
-        <button class="edit-btn-profile">Edit</button>
-      </a>
+      <a href="/profile/edit"><button class="edit-btn-profile">Edit</button></a>
     </div>
 
     <div class="profile-and-btn">
       <div class="profile-card">
-        <% if(user.userProfile && user.userProfile.image) { %>
-          <img src="<%= user.userProfile.image %>" class="profile-img">
+        <% if(user.userProfile?.image) { %>
+          <img src="<%= user.userProfile.image %>" alt="User Profile Image" class="profile-img" />
         <% } else { %>
-          <i class="fa fa-user" style="font-size:3rem; margin-bottom:0.5rem;"></i>
+          <i class="fa fa-user" style="font-size: 2rem; margin-bottom: 1rem;"></i>
         <% } %>
         <h3><%= user.username %></h3>
       </div>
+
       <% if (!hasProfileInfo) { %>
-  <div class="completeProfile">
-    <h3>Complete your profile</h3>
-    <p>Your wonderlust profile is an<br> important part of every reservation...</p>
-    <a href="/profile/edit">
-      <button class="cta-btn">Get started</button>
-    </a>
-  </div>
-<% } %>
-
+        <div class="completeProfile">
+          <h3>Complete your profile</h3>
+          <p>Your MapMyReview profile is an important part of every reservation...</p>
+          <a href="/profile/edit" class="cta-btn">Get started</a>
+        </div>
+      <% } %>
     </div>
 
-    <div class="profile-info">
-      <div class="profile-info-content">
-              <i class="fas fa-user" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>Name:</strong> <%= user.userProfile?.name || "Not set" %><br>
-      <hr>
-      </div>
-
-      <div class="profile-info-content">
-        <i class="fas fa-hand-paper" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>Age:</strong> <%= user.userProfile?.age || "Not set" %><br>
-      <hr>
-      </div>
-
-    <div class="profile-info-content">
-       <i class="fas fa-pen" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>Bio:</strong> <%= user.userProfile?.bio || "Not set" %><br>
-      <hr>
+    <!-- Dropdown Toggle -->
+    <div class="dropdown-toggle" onclick="toggleProfileInfo(this)">
+      Show Details
+      <i class="fas fa-chevron-down"></i>
     </div>
 
-<div class="profile-info-content">
-        <i class="fas fa-map-marker-alt" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>Current Address:</strong> <%= user.userProfile?.currentAdress || "Not set" %><br>
-      <hr>
-</div>
-
-    <div class="profile-info-content">
-       <i class="fas fa-city" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>Home Town Address:</strong> <%= user.userProfile?.homeTownAdress || "Not set" %><br>
-      <hr>
+    <!-- Profile Details -->
+    <div id="profileDetails" class="profile-info profile-info-dropdown">
+      <div class="profile-info-content"><i class="fas fa-user"></i><strong>Name:</strong> <span><%= user.userProfile?.name || "Not set" %></span></div>
+      <div class="profile-info-content"><i class="fas fa-birthday-cake"></i><strong>Age:</strong> <span><%= user.userProfile?.age || "Not set" %></span></div>
+      <div class="profile-info-content"><i class="fas fa-pen"></i><strong>Bio:</strong> <span><%= user.userProfile?.bio || "Not set" %></span></div>
+      <div class="profile-info-content"><i class="fas fa-map-marker-alt"></i><strong>Current Address:</strong> <span><%= user.userProfile?.currentAdress || "Not set" %></span></div>
+      <div class="profile-info-content"><i class="fas fa-city"></i><strong>Home Town:</strong> <span><%= user.userProfile?.homeTownAdress || "Not set" %></span></div>
+      <div class="profile-info-content"><i class="fas fa-plane"></i><strong>Hobbies:</strong> <span><%= user.userProfile?.hobbies || "Not set" %></span></div>
+      <div class="profile-info-content"><i class="fas fa-heart"></i><strong>Relationship:</strong> <span><%= user.userProfile?.RelationShip || "Not set" %></span></div>
+      <div class="profile-info-content"><i class="fas fa-graduation-cap"></i><strong>College:</strong> <span><%= user.userProfile?.Collage || "Not set" %></span></div>
+      <div class="profile-info-content"><i class="fas fa-briefcase"></i><strong>Work:</strong> <span><%= user.userProfile?.work || "Not set" %></span></div>
+      <div class="profile-info-content"><i class="fas fa-dog"></i><strong>Favorite Animal:</strong> <span><%= user.userProfile?.favAnimal || "Not set" %></span></div>
     </div>
-    
-    <div class="profile-info-content">
-            <i class="fas fa-plane" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>Hobbies:</strong> <%= user.userProfile?.hobbies || "Not set" %><br>
-      <hr>
-    </div>
-
-    <div class="profile-info-content">
-        <i class="fas fa-heart" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>Relationship Status:</strong> <%= user.userProfile?.RelationShip || "Not set" %><br>
-      <hr>
-    </div>
-
-<div class="profile-info-content">
-        <i class="fas fa-hand-paper" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>collage:</strong> <%= user.userProfile?.Collage || "Not set" %><br>
-      <hr>
-</div>
-
-<div class="profile-info-content">
-              <i class="fas fa-hand-paper" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>work:</strong> <%= user.userProfile?.work || "Not set" %><br>
-      <hr>
-</div>
-
-<div class="profile-info-content">
-        <i class="fas fa-dog" style="font-size: 1.2rem;"></i>&nbsp;&nbsp;
-      <strong>Favorite Animal:</strong> <%= user.userProfile?.favAnimal || "Not set" %><br>
-      <hr>
-</div>
   </div>
 </div>
+
+<script>
+  function toggleProfileInfo(toggleBtn) {
+    const details = document.getElementById("profileDetails");
+    details.classList.toggle("show");
+    toggleBtn.classList.toggle("open");
+  }
+</script>

@@ -89,13 +89,6 @@ const userSchema = new Schema({
     default: false,
   },
 
-  // ===== Email Verification Fields =====
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-  emailToken: String,
-  emailTokenExpires: Date,
 
   createdAt: {
     type: Date,
@@ -104,7 +97,7 @@ const userSchema = new Schema({
 });
 
 // passport-local-mongoose plugin लाई email लाई usernameField बनाउन configure गर्नुहोस्
-userSchema.plugin(passportLocalMongoose, { usernameField: "email" });
+userSchema.plugin(passportLocalMongoose); 
 
 // Avoid OverwriteModelError
 module.exports = mongoose.models.User || mongoose.model("User", userSchema);

@@ -1,6 +1,9 @@
+const mongoose = require('mongoose');
 const Report = require("../models/Report");
 const Listing = require("../models/Listing");
 const Review = require("../models/Review");
+const Message = require("../models/Message");
+
 
 // User creates a report
 const DELETE_THRESHOLD = 20;  // threshold set garna sakincha
@@ -70,7 +73,7 @@ module.exports.createReport = async (req, res) => {
 
 
 
-// Admin: Show grouped reports (by listing) with counts, unique reasons, status summary
+// // Admin: Show grouped reports (by listing) with counts, unique reasons, status summary
 module.exports.renderReports = async (req, res) => {
   try {
     // Fetch reports for listings only, exclude resolved reports
@@ -144,12 +147,86 @@ module.exports.deleteReportedContent = async (req, res) => {
   }
 };
 
-// Admin: Dismiss single report (mark status dismissed)
+// // Admin: Dismiss single report (mark status dismissed)
+// module.exports.dismissReport = async (req, res) => {
+//   try {
+//     const { reportId } = req.params;
+//     await Report.findByIdAndUpdate(reportId, { status: "dismissed" });
+//     req.flash("info", "Report dismissed.");
+//     res.redirect("/admin/reports");
+//   } catch (err) {
+//     console.error("Error dismissing report:", err);
+//     req.flash("error", "Failed to dismiss report.");
+//     res.redirect("/admin/reports");
+//   }
+// };
+
+// // Admin: Resolve single report (mark status resolved)
+// module.exports.resolveReport = async (req, res) => {
+//   try {
+//     const { reportId } = req.params;
+//     await Report.findByIdAndUpdate(reportId, { status: "resolved" });
+//     req.flash("success", "Report marked as resolved.");
+//     res.redirect("/admin/reports");
+//   } catch (err) {
+//     console.error("Error resolving report:", err);
+//     req.flash("error", "Failed to resolve report.");
+//     res.redirect("/admin/reports");
+//   }
+// };
+
+
+
+module.exports.showMailbox = async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.user._id); // cast to ObjectId
+
+    const messages = await Message.find({ recipient: userId })
+      .populate('sender', 'username')
+      .sort({ createdAt: -1 });
+
+    res.render('users/mailbox', { messages });
+  } catch (err) {
+    console.error('Mailbox Error:', err);
+    res.status(500).send('Server Error');
+  }
+};
+
 module.exports.dismissReport = async (req, res) => {
   try {
     const { reportId } = req.params;
-    await Report.findByIdAndUpdate(reportId, { status: "dismissed" });
-    req.flash("info", "Report dismissed.");
+    const report = await Report.findByIdAndUpdate(reportId, { status: "dismissed" });
+
+    if (report) {
+      // Message create garne
+      await Message.create({
+        sender: req.user._id,
+        recipient: report.reporter,
+        subject: "Report Status Update",
+        body: `Your report on ${report.type} has been dismissed by admin.`,
+      });
+
+      // 1 min pachhi delete garne schedule garne
+      setTimeout(async () => {
+        try {
+          // Message delete garne
+          await Message.deleteMany({
+            subject: "Report Status Update",
+            body: { $regex: report.type },  // report.type samma milne message matra
+            recipient: report.reporter
+          });
+          // Report pani delete garne
+          await Report.findByIdAndDelete(reportId);
+
+          console.log(`Dismissed report र message delete भयो: ${reportId}`);
+        } catch (err) {
+          console.error("Scheduled delete मा error आयो:", err);
+        }
+      }, 24 * 60 * 60 * 1000);  // 1 मिनेट पछि
+
+    }
+
+    req.flash("info", "Report dismissed and user notified.");
     res.redirect("/admin/reports");
   } catch (err) {
     console.error("Error dismissing report:", err);
@@ -158,12 +235,35 @@ module.exports.dismissReport = async (req, res) => {
   }
 };
 
-// Admin: Resolve single report (mark status resolved)
 module.exports.resolveReport = async (req, res) => {
   try {
     const { reportId } = req.params;
-    await Report.findByIdAndUpdate(reportId, { status: "resolved" });
-    req.flash("success", "Report marked as resolved.");
+    const report = await Report.findByIdAndUpdate(reportId, { status: "resolved" });
+
+    if (report) {
+      await Message.create({
+        sender: req.user._id,
+        recipient: report.reporter,
+        subject: "Report Status Update",
+        body: `Your report on ${report.type} has been resolved by admin.`,
+      });
+
+      setTimeout(async () => {
+        try {
+          await Message.deleteMany({
+            subject: "Report Status Update",
+            body: { $regex: report.type },
+            recipient: report.reporter
+          });
+          await Report.findByIdAndDelete(reportId);
+          console.log(`Resolved report र message delete भयो: ${reportId}`);
+        } catch (err) {
+          console.error("Scheduled delete मा error आयो:", err);
+        }
+      }, 24 * 60 * 60 * 1000); // 1 मिनेट पछि
+    }
+
+    req.flash("success", "Report resolved and user notified.");
     res.redirect("/admin/reports");
   } catch (err) {
     console.error("Error resolving report:", err);
@@ -171,4 +271,3 @@ module.exports.resolveReport = async (req, res) => {
     res.redirect("/admin/reports");
   }
 };
-

@@ -142,6 +142,7 @@ const ListingSchema = new Schema({
       "SoloTravel",
       "Room",
       "Iconic city",
+      "Waterfall",
     ],
   },
 

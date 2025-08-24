@@ -1,170 +1,241 @@
 <% layout("layouts/boilerplate") -%>
 
-<div id="filters">
-  <a href="/listings?category=Hiking">
-    <div class="filter">
-      <div><i class="fa-solid fa-person-hiking"></i></div>
-      <p>Hiking</p>
-    </div>
-  </a>
+<style>
+  #filters {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
+  }
 
-  <a href="/listings?category=Iconic city">
-    <div class="filter">
-      <div><i class="fa-solid fa-city"></i></div>
-      <p>Iconic city</p>
-    </div>
-  </a>
+  .scroll-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 50%;
+    background: #fff;
+    color: #3a4a8f;
+    border: 2px solid #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(58, 74, 143, 0.1);
+    transition: background 0.3s, transform 0.2s;
+    flex-shrink: 0;
+  }
 
-  <a href="/listings?category=Mountain">
-    <div class="filter">
-      <div><i class="fa-solid fa-mountain"></i></div>
-      <p>Mountain</p>
-    </div>
-  </a>
+  .scroll-btn:hover:not(:disabled) {
+    background: #3a4a8f;
+    color: #fff;
+    transform: scale(1.1);
+  }
 
-  <a href="/listings?category=Beach">
-    <div class="filter">
-      <div><i class="fa-solid fa-person-swimming"></i></div>
-      <p>Beach</p>
-    </div>
-  </a>
+  .scroll-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 
-  <a href="/listings?category=Island">
-    <div class="filter">
-      <div><i class="fa-solid fa-italic"></i></div>
-      <p>Island</p>
-    </div>
-  </a>
+  .categories-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding-bottom: 4px;
+    flex: 1;
+    scroll-behavior: smooth;
+  }
 
-  <a href="/listings?category=Desert">
-    <div class="filter">
-      <div><i class="fa-solid fa-campground"></i></div>
-      <p>Desert</p>
-    </div>
-  </a>
+  .categories-container::-webkit-scrollbar { display: none; }
+  .categories-container { -ms-overflow-style: none; scrollbar-width: none; }
 
-  <a href="/listings?category=Forest">
-    <div class="filter">
-      <div><i class="fa-solid fa-cow"></i></div>
-      <p>Forest</p>
-    </div>
-  </a>
+  .category-item {
+    min-width: 100px;
+    background: linear-gradient(135deg, #f5f7fa, #e4e8eb);
+    border-radius: 12px;
+    padding: 10px 14px;
+    text-align: center;
+    color: #2d3748;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.25s, background 0.25s;
+    flex-shrink: 0;
+  }
 
-  <a href="/listings?category=Wildlife">
-    <div class="filter">
-      <div><i class="fa-solid fa-snowflake"></i></div>
-      <p>Wildlife</p>
-    </div>
-  </a>
+  .category-item:hover {
+    transform: translateY(-4px);
+    background: linear-gradient(135deg, #ebf4ff, #d5e3ff);
+  }
 
-  <a href="/listings?category=Romantic">
-    <div class="filter">
-      <div><i class="fa-solid fa-igloo"></i></div>
-      <p>Romantic</p>
-    </div>
-  </a>
+  .category-icon { font-size: 16.5px; margin-bottom: 4px; color: #3a4a8f; }
 
-  <a href="/listings?category=Adventure">
-    <div class="filter">
-      <div><i class="fa-solid fa-ship"></i></div>
-      <p>Adventure</p>
-    </div>
-  </a>
+  .tax-toggle-container {
+    display: flex;
+    align-items: center;
+    padding: 8px 14px;
+    background: #fff;
+    border-radius: 30px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+  }
 
-  <a href="/listings?category=Cultural">
-    <div class="filter">
-      <div><i class="fa-solid fa-fire"></i></div>
-      <p>Cultural</p>
-    </div>
-  </a>
+  .tax-toggle-label {
+    margin-right: 5px;
+    font-size: 15px;
+    color: #4a5568;
+    font-weight: 600;
+  }
 
-  <div class="tax-toggle">
-    <div class="form-check-reverse form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-      <label class="form-check-label" for="flexSwitchCheckDefault">Display total taxes</label>
-    </div>
+  .tax-toggle-switch {
+    position: relative;
+    width: 60px;
+    height: 40px;
+  }
+
+  .tax-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .tax-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    background: #e2e8f0;
+    border-radius: 20px;
+    top: 0; left: 0; right: 0; bottom: 0;
+    transition: background 0.3s;
+  }
+
+  .tax-toggle-slider:before {
+    content:"";
+    position: absolute;
+    width: 25px;
+    height: 15px;
+    background: white;
+    border-radius: 50%;
+    top: 8px; left: 3px;
+    transition: transform 0.3s;
+    margin-top:0.2rem;
+  }
+
+  input:checked + .tax-toggle-slider {
+    background: #3a4a8f;
+  }
+
+  input:checked + .tax-toggle-slider:before {
+    transform: translateX(26px);
+  }
+
+  .tax-info {
+    display: none;
+    background: #f8fafc;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #4a5568;
+    margin-left: 6px;
+    transition: opacity 0.3s;
+  }
+
+  .show-tax .tax-info {
+    display: inline-block;
+    opacity: 1;
+  }
+</style>
+
+<div id="filters" style="margin-top:1.5rem;">
+  <button class="scroll-btn" id="scroll-left" aria-label="Scroll left" disabled>&larr;</button>
+  <div class="categories-container" id="categories-scroll">
+    <% const categories = [
+      { name: "Hiking", icon: "fa-person-hiking" },
+      { name: "Iconic City", icon: "fa-city" },
+      { name: "Mountain", icon: "fa-mountain" },
+      { name: "Beach", icon: "fa-person-swimming" },
+      { name: "Island", icon: "fa-italic" },
+      { name: "Historical", icon: "fa-campground" },
+      { name: "Forest", icon: "fa-tree" },
+      { name: "Wildlife", icon: "fa-paw" },
+      { name: "Romantic", icon: "fa-heart" },
+      { name: "Adventure", icon: "fa-map-marked-alt" },
+      { name: "Cultural", icon: "fa-landmark" }
+    ]; %>
+    <% categories.forEach(cat => { %>
+      <a href="/listings?category=<%= cat.name %>" class="category-item">
+        <div class="category-icon"><i class="fa-solid <%= cat.icon %>"></i></div>
+        <p class="category-name"><%= cat.name %></p>
+      </a>
+    <% }) %>
+  </div>
+  <button class="scroll-btn" id="scroll-right" aria-label="Scroll right">&rarr;</button>
+  <div class="tax-toggle-container">
+    <span class="tax-toggle-label">Show Taxes</span>
+    <label class="tax-toggle-switch">
+      <input type="checkbox" id="tax-toggle">
+      <span class="tax-toggle-slider"></span>
+    </label>
   </div>
 </div>
 
 <div class="rows row-cols-lg-4 row-cols-md-3 row-cols-sm-1 mt-3">
-  <% for(let listing of allListings) { %>
+  <% allListings.forEach(listing => { %>
     <div class="cols mb-4">
       <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark" onclick="animateCard(this)">
         <div class="card card-underline">
-
-          <!-- 🖼️ Main Listing Image (पहिलो image देखाउने) -->
-          <% if (listing.image && listing.image.length > 0) { %>
-            <img 
-              src="<%= listing.image[0].url %>" 
-              alt="listing image"
-              class="card-img-top"
-            >
+          <% if (listing.image?.length > 0) { %>
+            <img src="<%= listing.image[0].url %>" alt="<%= listing.title %>" class="card-img-top">
           <% } else { %>
-            <!-- यदि image छैन भने placeholder image -->
-            <img 
-              src="/images/placeholder.png" 
-              alt="No image available" 
-              class="card-img-top"
-            >
+            <img src="/images/placeholder.png" alt="No image" class="card-img-top">
           <% } %>
-
-          <!-- ❤️ Favorite Button -->
-          <button 
-            class="favorite-btn <%= currUser && currUser.favorites.some(fav => fav.toString() === listing._id.toString()) ? 'hearted' : '' %>" 
-            data-id="<%= listing._id %>" 
-            onclick="toggleFav(event, this)">
-            <% if (currUser && currUser.favorites.some(fav => fav.toString() === listing._id.toString())) { %>
-              <i class="fa-solid fa-heart"></i>
-            <% } else { %>
-              <i class="fa-regular fa-heart"></i>
-            <% } %>
+          <button class="favorite-btn <%= currUser?.favorites?.some(fav => fav.toString() === listing._id.toString()) ? 'hearted' : '' %>"
+                  data-id="<%= listing._id %>" onclick="toggleFav(event, this)">
+            <i class="fa-<%= currUser?.favorites?.some(fav => fav.toString() === listing._id.toString()) ? 'solid' : 'regular' %> fa-heart"></i>
           </button>
-
-          <!-- 📝 Card Body -->
           <div class="card-body">
+            <p class="card-text"><b><%= listing.title %></b></p>
             <p class="card-text">
-              <b><%= listing.title %></b>
-            </p>
-            <p class="card-text">
-              ₹<%= listing.price ? listing.price.toLocaleString("en-IN") : "price_unavailable" %> / per night
-              <i class="tax-info"> &nbsp; &nbsp; &nbsp;+18% GST</i>
+              ₹<%= listing.price?.toLocaleString('en-IN') ?? 'N/A' %> / visit
+              <span class="tax-info">+18% GST</span>
             </p>
           </div>
         </div>
       </a>
     </div>
-  <% } %>
+  <% }) %>
 </div>
 
 <script>
-  // Animate card on click
+  const scrollWrapper = document.getElementById('categories-scroll');
+  const btnLeft = document.getElementById('scroll-left');
+  const btnRight = document.getElementById('scroll-right');
+
+  function updateBtns() {
+    btnLeft.disabled = scrollWrapper.scrollLeft <= 20;
+    btnRight.disabled = scrollWrapper.scrollLeft >= scrollWrapper.scrollWidth - scrollWrapper.clientWidth - 20;
+  }
+
+  btnLeft.addEventListener('click', () => scrollWrapper.scrollBy({ left: -200, behavior: 'smooth' }));
+  btnRight.addEventListener('click', () => scrollWrapper.scrollBy({ left: 200, behavior: 'smooth' }));
+  scrollWrapper.addEventListener('scroll', updateBtns);
+  updateBtns();
+
+  document.getElementById('tax-toggle').addEventListener('change', e => {
+    document.querySelector('.rows').classList.toggle('show-tax', e.target.checked);
+  });
+
   function animateCard(link) {
     const card = link.querySelector('.card');
     card.classList.add('card-click-animate');
-    setTimeout(() => {
-      card.classList.remove('card-click-animate');
-    }, 400);
+    setTimeout(() => card.classList.remove('card-click-animate'), 400);
   }
 
-  // Toggle favorite
-  function toggleFav(event, btn) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    btn.classList.toggle("hearted");
-
-    const icon = btn.querySelector("i");
-    if (btn.classList.contains("hearted")) {
-      icon.classList.remove("fa-regular");
-      icon.classList.add("fa-solid");
-    } else {
-      icon.classList.remove("fa-solid");
-      icon.classList.add("fa-regular");
-    }
-
-    // Send toggle favorite request to backend
-    const id = btn.dataset.id;
-    fetch(`/favorites/toggle/${id}`, { method: "POST" })
-      .catch(err => console.error("Error toggling favorite:", err));
+  function toggleFav(e, btn) {
+    e.preventDefault(); e.stopPropagation();
+    btn.classList.toggle('hearted');
+    const icon = btn.querySelector('i');
+    icon.classList.toggle('fa-regular');
+    icon.classList.toggle('fa-solid');
+    fetch(`/favorites/toggle/${btn.dataset.id}`, { method: 'POST' }).catch(console.error);
   }
 </script>

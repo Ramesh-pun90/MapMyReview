@@ -547,6 +547,7 @@ flex-wrap: wrap;
 /* Smooth page load */
 .animate-card {
   animation: slideUpFade 0.6s ease-out;
+
 }
 
 .animate-heading {

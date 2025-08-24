@@ -6,7 +6,7 @@ const passport = require("passport");
 const multer = require("multer");
 const { storage } = require("../cloudConfig.js");
 const upload = multer({ storage });
-const { isAdmin, isReviewAuthor, isLoggedIn,isAdminBlocked,isAdminLoggedIn } = require("../middleware.js");
+const { isAdmin, isReviewAuthor, isLoggedIn,isAdminBlocked,isAdminLoggedIn,chooseStrongPassword } = require("../middleware.js");
 const reportController = require("../controllers/reports");
 
 
@@ -18,7 +18,7 @@ router.get("/home", adminController.Home);
 router.get("/signup", adminController.renderAdminSignup);
 
 // Handle admin signup
-router.post("/signup", wrapAsync(adminController.adminSignUp));
+router.post("/signup",chooseStrongPassword,wrapAsync(adminController.adminSignUp));
 
 // Render admin login page
 router.get("/login", adminController.renderAdminLogin);

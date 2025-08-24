@@ -1,5 +1,85 @@
 <% layout("layouts/boilerplate") %>
 
+<style>
+  .page-heading {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #1e293b;
+  }
+
+  .listing-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1.5rem;
+  }
+
+  .listing-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .card {
+    border-radius: 1.8rem;
+    overflow: hidden;
+    border: none;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    height: 100%;
+  }
+
+  .card-img-top {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .card:hover .card-img-top {
+    transform: scale(1.05);
+  }
+
+  .card-boddy-myListings {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .card-boddy-myListings p {
+    margin: 0.25rem 0;
+  }
+
+  .no-image-placeholder {
+    height: 220px;
+    background-color: #f3f4f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .no-listings-text {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #64748b;
+    width: 100%;
+  }
+
+  .listing-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+  }
+</style>
+
 <div class="container mt-4">
   <h2 class="page-heading">My Listings</h2>
 
@@ -8,17 +88,15 @@
       <p class="no-listings-text">Listings are not created yet.</p>
     <% } else { %>
       <% listings.forEach(listing => { %>
-        <div class="col listing-card">
+        <div class="listing-card">
           <a href="/listings/<%= listing._id %>" class="listing-link">
-            <div class="card card-underline">
-              <% if (listing.image && listing.image.url) { %>
-                <img src="<%= listing.image.url %>" alt="<%= listing.title %>" class="card-img-top">
+            <div class="card">
+              <% if (listing.image && listing.image.length > 0) { %>
+                <img src="<%= listing.image[0].url %>" alt="<%= listing.title %>" class="card-img-top">
               <% } else { %>
-                <div class="no-image-placeholder">
-                  No Image
-                </div>
+                <div class="no-image-placeholder">No Image</div>
               <% } %>
-              <div class="card-boddy-myListings" style="text-align:center; ">
+              <div class="card-boddy-myListings">
                 <p><strong><%= listing.title %></strong></p>
                 <p>Rs. <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / per night</p>
                 <p class="text-muted"><%= listing.location %>, <%= listing.country %></p>

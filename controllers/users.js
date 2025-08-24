@@ -130,3 +130,106 @@ module.exports.viewPublicProfile = async (req, res) => {
     res.render("users/showPublicProfile", { user });
 };
 
+
+
+// User Settings page देखाउने
+module.exports.renderUserSettings = (req, res) => {
+  res.render("users/userSettings");  // views/users/userSettings.ejs
+};
+
+// ✅ Update Username
+module.exports.updateUsername = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    if (!username || username.trim() === '') {
+      req.flash('error', 'Username cannot be empty.');
+      return res.redirect('/user/settings');
+    }
+
+    const existingUser = await User.findOne({ username });
+    if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
+      req.flash('error', 'Username already taken. Please choose another.');
+      return res.redirect('/user/settings');
+    }
+
+    const user = await User.findById(req.user._id);
+    user.username = username.trim();
+    await user.save();
+
+    // 🔥 Re-authenticate user after username update
+    req.login(user, (err) => {
+      if (err) {
+        req.flash('error', 'Re-authentication failed. Please login again.');
+        return res.redirect('/login');
+      }
+      req.flash('success', 'Username updated successfully!');
+      res.redirect('/user/settings');
+    });
+  } catch (err) {
+    console.error('Username Update Error:', err);
+    req.flash('error', 'Something went wrong while updating username.');
+    res.redirect('/user/settings');
+  }
+};
+
+
+// Email update गर्ने function
+module.exports.updateEmail = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { newEmail } = req.body;
+
+    // नयाँ इमेल पहिलेबाट छ कि भनेर चेक गर्ने
+    const existingUser = await User.findOne({ email: newEmail });
+    if (existingUser) {
+      req.flash('error', 'Email is already in use.');
+      return res.redirect('/user/settings');
+    }
+
+    await User.findByIdAndUpdate(userId, { email: newEmail });
+
+    req.flash('success', 'Email updated successfully.');
+    res.redirect('/user/settings');
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Something went wrong.');
+    res.redirect('/user/settings');
+  }
+};
+
+// Password change गर्ने function (passport-local-mongoose अनुसार)
+module.exports.changePassword = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+      req.flash('error', 'New password and confirm password do not match.');
+      return res.redirect('/user/settings');
+    }
+
+    const user = await User.findById(userId);
+    const authResult = await user.authenticate(currentPassword);
+
+    if (!authResult.user) {
+      req.flash('error', 'Current password is incorrect.');
+      return res.redirect('/user/settings');
+    }
+
+    user.setPassword(newPassword, async (err) => {
+      if (err) {
+        req.flash('error', 'Something went wrong.');
+        return res.redirect('/user/settings');
+      }
+      await user.save();
+      req.flash('success', 'Password changed successfully.');
+      res.redirect('/user/settings');
+    });
+
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Something went wrong.');
+    res.redirect('/user/settings');
+  }
+};

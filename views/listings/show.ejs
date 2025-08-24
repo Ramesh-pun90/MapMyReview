@@ -381,19 +381,24 @@ form[action="/reports/create"] button[type="submit"]:hover {
     <% } %>
 
     <!-- listings/show.ejs or reviews partial मा -->
-<form action="/reports/create" method="POST">
-  <input type="hidden" name="type" value="listing" />
-  <input type="hidden" name="targetId" value="<%= listing._id %>" />
-  <label for="reason">Report Reason:</label>
-  <textarea name="reason" id="reason" required></textarea>
-  <button type="submit">Submit Report</button>
-</form>
+<% if (currUser) { %>
+  <form action="/reports/create" method="POST">
+    <input type="hidden" name="type" value="listing" />
+    <input type="hidden" name="targetId" value="<%= listing._id %>" />
+    <label for="reason">Report Reason:</label>
+    <textarea name="reason" id="reason" required></textarea>
+    <button type="submit">Submit Report</button>
+  </form>
+<% } %>
+
 
 
 
     <!-- reviews form -->
     <% if (currUser) { %>
       <div class="col-md-8 mx-auto mt-5" id="reviewSection">
+              <h4 style="margin-bottom: 1rem;">Leave a review</h4>
+
         <form id="reviewForm" novalidate>
           <fieldset class="starability-slot" aria-label="Star rating">
             <% for (let i = 5; i >= 1; i--) { %>
@@ -417,9 +422,8 @@ form[action="/reports/create"] button[type="submit"]:hover {
           Thank you for your review! ❤️
         </div>
       </div>
-    <% } else { %>
-      <p class="text-center mt-5"><a href="/login">Login</a> to leave a review.</p>
     <% } %>
+ 
 
     <!-- review list -->
     <div id="reviewsList" class="row g-4 mt-5 justify-content-center">

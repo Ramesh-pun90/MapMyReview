@@ -317,12 +317,49 @@ module.exports.renderUserDetail = async (req, res) => {
   res.render("admin/userShow", { user });
 };
 
-// Delete user by admin
+// Delete user by admin and cascade delete user's listings, reviews, and reports
 module.exports.deleteUser = async (req, res) => {
   const { id } = req.params;
-  await User.findByIdAndDelete(id);
-  req.flash("success", "User has been deleted.");
-  res.redirect("/admin/user");
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      req.flash("error", "User not found");
+      return res.redirect("/admin/user");
+    }
+
+    // 1. Delete all listings created by this user along with their images & reports
+    const userListings = await Listing.find({ owner: id });
+    for (let listing of userListings) {
+      // Delete images from Cloudinary
+      for (let img of listing.image) {
+        await cloudinary.uploader.destroy(img.filename);
+      }
+      // Delete related reports of this listing
+      await Report.deleteMany({ targetId: listing._id.toString(), type: "listing" });
+
+      // Delete reviews related to this listing
+      await Review.deleteMany({ _id: { $in: listing.reviews } });
+
+      // Finally delete the listing itself
+      await Listing.findByIdAndDelete(listing._id);
+    }
+
+    // 2. Delete all reviews made by this user on other listings
+    await Review.deleteMany({ author: id });
+
+    // 3. Delete all reports made by this user
+    await Report.deleteMany({ reporter: id });
+
+    // 4. Finally, delete the user
+    await User.findByIdAndDelete(id);
+
+    req.flash("success", "User and all their data (listings, reviews, reports) deleted.");
+    res.redirect("/admin/user");
+  } catch (e) {
+    console.error(e);
+    req.flash("error", "Failed to delete user and associated data.");
+    res.redirect("/admin/user");
+  }
 };
 
 // Block/unblock user by admin

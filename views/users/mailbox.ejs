@@ -1,0 +1,171 @@
+<% layout("layouts/boilerplate") -%>
+
+<style>
+  .inbox-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    font-family: 'Poppins', sans-serif;
+  }
+  .inbox-header {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  .message-card {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+    border-left: 5px solid #007bff;
+    position: relative;
+  }
+  .message-card.unread {
+    background-color: #eef6ff;
+    border-left-color: #28a745;
+  }
+  .message-meta {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  .message-body {
+    font-size: 16px;
+    color: #333;
+  }
+  #refresh-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 20px;
+    display: none;
+    z-index: 1000;
+  }
+</style>
+
+<div class="inbox-container">
+  <div class="inbox-header">
+    <h2>📬 Your MailBox</h2>
+    <p class="text-muted">Admin message</p>
+  </div>
+
+  <div id="messages-container">
+    <% if (!messages || messages.length === 0) { %>
+      <div class="alert alert-info text-center">your inbox is empty।</div>
+    <% } else { %>
+      <% messages.forEach(msg => { %>
+        <div class="message-card <%= msg.read ? '' : 'unread' %>" id="message-<%= msg._id %>">
+          <div class="message-meta">
+            <strong>From:</strong> <%= msg.sender ? msg.sender.username : "Unknown" %> &nbsp; | &nbsp;
+            <strong>Received:</strong> <%= new Date(msg.createdAt).toLocaleString() %>
+          </div>
+          <div class="message-meta">
+            <strong>Subject:</strong> <%= msg.subject || "No subject" %>
+          </div>
+          <div class="message-body">
+            <%= msg.body || "No message content." %>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+</div>
+
+<div id="refresh-indicator">
+  <i class="fas fa-sync-alt fa-spin"></i> Updating messages...
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const messages = <%- JSON.stringify(messages || []) %>;
+    const refreshIndicator = document.getElementById('refresh-indicator');
+    const messagesContainer = document.getElementById('messages-container');
+    let isRefreshing = false;
+
+    // Function to fetch new messages
+    const refreshMessages = async () => {
+      if (isRefreshing) return;
+      isRefreshing = true;
+      refreshIndicator.style.display = 'block';
+      
+      try {
+        const response = await fetch('/messages/api/inbox');
+        const data = await response.json();
+        
+        if (data.success && data.messages) {
+          // Only update if messages have changed
+          if (JSON.stringify(messages) !== JSON.stringify(data.messages)) {
+            // Re-render the messages container
+            messagesContainer.innerHTML = '';
+            
+            if (data.messages.length === 0) {
+              messagesContainer.innerHTML = '<div class="alert alert-info text-center">your inbox is empty।</div>';
+            } else {
+              data.messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message-card ${msg.read ? '' : 'unread'}`;
+                messageDiv.id = `message-${msg._id}`;
+                
+                messageDiv.innerHTML = `
+                  <div class="message-meta">
+                    <strong>From:</strong> ${msg.sender ? msg.sender.username : "Unknown"} &nbsp; | &nbsp;
+                    <strong>Received:</strong> ${new Date(msg.createdAt).toLocaleString()}
+                  </div>
+                  <div class="message-meta">
+                    <strong>Subject:</strong> ${msg.subject || "No subject"}
+                  </div>
+                  <div class="message-body">
+                    ${msg.body || "No message content."}
+                  </div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error refreshing messages:', error);
+      } finally {
+        isRefreshing = false;
+        refreshIndicator.style.display = 'none';
+      }
+    };
+
+    // Auto-delete messages after 1 minute
+    messages.forEach(msg => {
+      setTimeout(() => {
+        fetch(`/messages/delete/${msg._id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const msgDiv = document.getElementById(`message-${msg._id}`);
+            if (msgDiv) {
+              msgDiv.remove();
+              // If no messages left, show empty message
+              if (document.querySelectorAll('.message-card').length === 0) {
+                messagesContainer.innerHTML = '<div class="alert alert-info text-center">your inbox is empty।</div>';
+              }
+            }
+          }
+        })
+        .catch(err => console.error("Auto delete failed:", err));
+      }, 60000);
+    });
+
+    // Refresh messages every 30 seconds
+    setInterval(refreshMessages, 30000);
+    
+    // Also refresh when window gains focus (user comes back to tab)
+    window.addEventListener('focus', refreshMessages);
+  });
+</script>

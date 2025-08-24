@@ -296,3 +296,45 @@ module.exports.isAdminLoggedIn = (req, res, next) => {
 };
 
 
+module.exports.chooseStrongPassword = (req, res, next) => {
+  const password = req.body.password || req.body.user?.password || "";
+
+  const uppercase = /[A-Z]/;
+  const lowercase = /[a-z]/;
+  const number = /[0-9]/;
+  const specialChar = /[!@#$%^&*(),.?":{}|<>]/;
+  const minLength = 8;
+
+  function safeRedirectBack() {
+    const backURL = req.header('Referer') || '/register'; // change fallback route as needed
+    return res.redirect(backURL);
+  }
+
+  if (!password) {
+    req.flash("error", "Password is required.");
+    return safeRedirectBack();
+  }
+
+  if (password.length < minLength) {
+    req.flash("error", `Password must be at least ${minLength} characters.`);
+    return safeRedirectBack();
+  }
+  if (!uppercase.test(password)) {
+    req.flash("error", "Password must contain at least one uppercase letter.");
+    return safeRedirectBack();
+  }
+  if (!lowercase.test(password)) {
+    req.flash("error", "Password must contain at least one lowercase letter.");
+    return safeRedirectBack();
+  }
+  if (!number.test(password)) {
+    req.flash("error", "Password must contain at least one number.");
+    return safeRedirectBack();
+  }
+  if (!specialChar.test(password)) {
+    req.flash("error", "Password must contain at least one special character.");
+    return safeRedirectBack();
+  }
+
+  next();
+};
